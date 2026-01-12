@@ -1,0 +1,22 @@
+README for Triangle-Classifier
+
+Niloofar Montazeri, Sept 21, 2025
+-----------------------------------------------------
+Code files: Makefile, main.cpp, triangle.cpp, triangle.h
+Test files: test-input1.txt, test-input2.txt, ideal-output1.txt, ideal-output2.txt
+Extra files: README (this file)
+----------------------------------------------------
+This is a simple assignment, to understand the overall pipeline we will follow
+in our assignments. 
+----------------------------------------------------
+USAGE: 
+1) Run "make", to get executable "main".
+2) Run "./main <INPUT FILE> <OUTPUT FILE>"
+
+Example:
+./main test-input1.txt test-output1.txt
+./main test-input2.txt test-output2.txt
+
+Each line of INPUT FILE should have three numbers for three edges of a triangle. 
+Each corresponding line of OUTPUT FILE has the class of the corresponding triangle. The classes are:
+"invalid", "equilateral", "isosceles", "scalene"

@@ -1,0 +1,12 @@
+# Spec file for Bard assignment of CSE101, Fall 2025
+#
+#################
+f1: Makefile
+f2: README
+f3: shakespeare-cleaned.txt
+c1: make
+e1: main
+p1: ./main
+t1: simple-input.txt
+o1: test-output.txt
+i1: simple-output.txt

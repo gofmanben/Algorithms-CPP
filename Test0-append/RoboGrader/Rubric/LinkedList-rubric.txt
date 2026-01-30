@@ -1,0 +1,17 @@
+# Rubric file for append question in LinkedList practice test of CSE101, Winter 2025
+#
+#################
+s0: 0
+c0: make
+e0: main
+p0: ./main
+#################
+s1: 50
+t1: Tests/simple-input-append.txt
+i1: Tests/simple-output-append.txt
+m1: Simple input passes
+#################
+s2: 50
+t2: Tests/large-input-append.txt
+i2: Tests/large-output-append.txt
+m2: Large input passes

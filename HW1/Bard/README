@@ -1,0 +1,63 @@
+README for Bard
+
+Benjamin Gofman, Jan 20, 2025
+-----------------------------------------------------
+Code files: Makefile, main.cpp, linkedlist.h, linkedlist.cpp, wordlist.h, wordlist.cpp
+Test files: shakespeare-cleaned.txt, simple-input.txt, simple-output.txt, Tests/more-input.txt, Tests/more-output.txt
+Extra files: README (this file)
+----------------------------------------------------
+This is a simple assignment, to understand the overall pipeline we will follow
+in our assignments. 
+----------------------------------------------------
+USAGE: 
+1) Run "make", to get executable "main".
+2) Run "./main <INPUT FILE> <OUTPUT FILE>"
+
+Example:
+./main simple-input.txt test-output.txt
+./main Tests/more-input.txt test-more-output.txt
+
+----------------------------------------------------
+
+This program builds an in-memory data structure from the file
+"shakespeare-cleaned.txt". It groups words by their length and stores them
+in sorted order so they can be retrieved by rank.
+
+After building the structure, the program reads queries from an input file.
+Each query contains:
+
+(wordLength rank)
+
+The program outputs the word of that length at the given rank (0-indexed),
+or "-" if the rank/length is invalid or no such word exists.
+-----------------------------------------------------
+
+HOW IT WORKS (HIGH LEVEL):
+1) Read every word from shakespeare-cleaned.txt
+2) Insert the word into a LinkedList bucket based on word length
+3) Each bucket contains a WordList of words stored in sorted order
+4) Then read the input queries:
+   - Find the correct bucket (word length)
+   - Walk forward "rank" nodes in that bucket’s WordList
+   - Output the word if found, otherwise output "-"
+
+-----------------------------------------------------
+
+FILES EXPLANATION:
+main.cpp
+- Opens shakespeare-cleaned.txt and builds the data structure
+- Reads query pairs (wordLength, rank) from the input file
+- Writes the answer word (or "-") to the output file
+
+linkedlist.h / linkedlist.cpp
+- Implements the LinkedList of buckets
+- Each bucket represents a word length (len)
+- Each bucket stores a WordList of words of that length
+
+wordlist.h / wordlist.cpp
+- Implements the WordList for a specific length bucket
+- Handles inserting words and storing frequency counts
+- Provides access to the head node and size
+
+shakespeare-cleaned.txt
+- Text source used to build the word-frequency lists

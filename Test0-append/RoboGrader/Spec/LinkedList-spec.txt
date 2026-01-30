@@ -1,0 +1,9 @@
+# Spec file for append, in LinkedList tests of CSE101, WInter 2025
+#
+#################
+c1: make
+e1: main
+p1: ./main
+t1: simple-input-append.txt
+o1: student-output.txt
+i1: simple-output-append.txt

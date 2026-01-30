@@ -1,0 +1,14 @@
+i 10
+i 10
+p
+ded
+p
+i 20
+i 30
+ded
+p
+i 20
+i 30
+p
+ded
+p

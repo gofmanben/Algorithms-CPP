@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+        "name": "Run main.exe",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/main.exe",
+        "args": ["Tests/simple-input.txt", "test-output.txt", "debug"],
+        "cwd": "${workspaceFolder}",
+        "MIMode": "gdb",
+        "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+        "preLaunchTask": "C/C++: g++.exe build active file"
+    },
+    {
+      "name": "Debug C/C++ File",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}\\main.exe",
+      "args": ["Tests/more-input.txt", "test-output.txt", "debug"],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe",
+      "preLaunchTask": "build"
+    }
+  ]
+}

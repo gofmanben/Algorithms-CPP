@@ -1,0 +1,17 @@
+# Rubric file for deletelast question in LinkedList tests of CSE101, WInter 2020
+#
+#################
+s0: 0
+c0: make
+e0: listwrapper
+p0: ./listwrapper
+#################
+s1: 50
+t1: Tests/simple-input-deletelast.txt
+i1: Tests/simple-output-deletelast.txt
+m1: Simple input passes
+#################
+s2: 50
+t2: Tests/large-input-deletelast.txt
+i2: Tests/large-output-deletelast.txt
+m2: Large input passes

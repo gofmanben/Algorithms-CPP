@@ -1,0 +1,9 @@
+# Spec file for reverse, in LinkedList tests of CSE101 
+#
+#################
+c1: make
+e1: listwrapper
+p1: ./listwrapper
+t1: simple-input-rotatetohead.txt
+o1: student-output.txt
+i1: simple-output-rotatetohead.txt

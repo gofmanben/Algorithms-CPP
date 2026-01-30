@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+        "name": "Run main.exe",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/listwrapper.exe",
+        "args": ["..\\RoboGrader\\Rubric\\Tests\\simple-input-rotatetohead.txt", "student-output.txt"],
+        "cwd": "${workspaceFolder}",
+        "MIMode": "gdb",
+        "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+        "preLaunchTask": "C/C++: g++.exe build active file"
+    },
+    {
+      "name": "Debug C/C++ File",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}\\listwrapper.exe",
+      "args": ["..\\RoboGrader\\Rubric\\Tests\\large-input-rotatetohead.txt", "student-output.txt"],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe",
+      "preLaunchTask": "build"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+i 50
+i 40
+i 30
+i 20
+i 10
+p
+roth 10
+p
+roth 30
+p
+roth 10
+p
+roth 40
+p

@@ -1,0 +1,42 @@
+p
+roth 0
+p
+i 10
+p
+roth 0
+p
+i 20
+i 30
+i 40
+i 50
+p
+roth 50
+p
+roth 40 
+p 
+roth 20
+p
+roth 10
+p
+roth 20
+p
+roth 30
+p
+roth 10
+p
+d 10
+p
+roth 50
+p
+roth 30
+p 
+roth 40
+p
+roth 20
+p
+roth 50
+p
+roth 20
+p
+roth 6
+p

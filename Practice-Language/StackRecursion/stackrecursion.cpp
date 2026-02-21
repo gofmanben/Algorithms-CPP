@@ -48,32 +48,37 @@ class Pair
 // 
 List language(string input_str, int k)
 {
-    List list;
-    stack<string> stk;
+  List result;
+  stack<Pair> stk;
+  stk.push({}); // first empty line ({in_str="", fixed_str=""})
 
-    stk.push("");  // start with empty string
+  int size = input_str.length(); // cse
+  
+  int index = 0;
+  while(!stk.empty()) {
+    Pair cur = stk.top(); // 0-[""/""], 1-[e/""], 2-[s/""], 3-[c/""]
+    stk.pop();
 
-    while (!stk.empty())
-    {
-        string curr = stk.top();
-        stk.pop();
+    string in_str = cur.in_str; // 0-[""], 1 -[e], 2 -[s], 3 -[c]
+    result.insert(in_str);      // 0-[""], 1a-[e], 2a-[s], 3a-[c]
 
-        list.insert(curr);
+    cout << index++ << ", " << in_str << endl;
 
-        int length = curr.size();
-
-        // If length < k, append each character and push back
-        if (length < k)
-        {
-            for (char c : input_str)
-            {
-                string next = curr + c;
-                stk.push(next);
-            }
-        }
+    for (int i = 0; i < size; i++) {
+      char ch = input_str[i];          // 0-[c, s, e], 1-[c, s, e], 2-[c, s, e], 3-[c, s, e]
+      string remaining = in_str + ch;  // 0-[c, s, e], 1-[ec, es, ee], 2-[sc, ss, se], 3-[cc, cs, ce]
+      int length = remaining.length(); // 0-1, 1-2, 2-2, 3-2
+      cout << in_str << "+" << ch << ", length: " << length << endl;
+      if (length < k) {  // k = 2
+        stk.push({remaining}); // 0-[c/"", s/"", e/""]
+      } else {
+        result.insert(remaining); // 1b-[ec, es, ee], 2b-[sc, ss, se], 3b-[cc, cs, ce]
+      }
     }
+  }
+  cout << "Result:" << result.print() << endl; // AFTER SORT: "", c, cc, ce, cs, e, ec, ee, es, s, sc, se, ss
 
-    return list;
+  return result;
 }
 
 

@@ -81,38 +81,36 @@ List stretch(string input_str, int k)
     sub.deleteList(); // free all the memory of this list
     return result;*/
     
-    List out;
+    List result;
 
-    if (k < 0)
-        return out;
+    stack<Pair> stk;
+    stk.push({input_str, ""}); // cse
+    
+    int index = 0;
+    while (!stk.empty()) {
+        Pair cur = stk.top(); // 0-[cse/""], 1-[se/cc], 2-[e/ccss], 3-[""/ccssee], 4-[""/ccsse], 5-[e/ccs], 6-[""/ccsee], 7-[""/ccse], 8-[se/c],
+                              // 9-[e/css], 10-[""/cssee], 11-[""/csse], 12-[e/cs], 13-[""/csee], 14-[""/cse]
+        stk.pop();
 
-    stack<Pair> st;
-    st.push(Pair{input_str, ""});
+        string in_str = cur.in_str; // 0-[cse], 1-[se], 2-[e], 3-[""], 4-[""], 5-[e], 6-[""], 7-[""], 8-[se], 9-[e], 10-[""], 11-[""], 12-[e], 13-[""], 14-[""]
+        cout << index++ << ", " << in_str << "/" << cur.fixed_str << endl;
+        if (in_str.empty()) {
+            result.insert(cur.fixed_str); // 3-[ccssee], 4-[ccsse], 6-[ccsee], 7-[ccse], 10-[cssee], 11-[csse], 12-[csee], 13-[cse]  <-----
+        } else {
+            char ch = in_str[0];                 // 0-[c],  1-[s], 2-[e], 5-[e], 8-[s], 9-[e], 12-[e]
+            string remaining = in_str.substr(1); // 0-[se], 1-[e], 2-[ ], 5-[ ], 8-[e], 9-[ ], 12-[ ]
+            cout << ch << " - "<< remaining << endl;
 
-    while (!st.empty())
-    {
-        Pair cur = st.top();
-        st.pop();
-
-        if (cur.in_str.empty())
-        {
-            out.insert(cur.fixed_str);
-            continue;
-        }
-
-        char c = cur.in_str[0];
-        string rest = cur.in_str.substr(1);
-
-        for (int i = 1; i <= k; i++)
-        {
-            Pair nxt;
-            nxt.in_str = rest;
-            nxt.fixed_str = cur.fixed_str + string(i, c);
-            st.push(nxt);
+            for (int i = 1; i <= k; i++) { // k = 2
+                string fill = string(i, ch); //0-[c, cc], 1-[s, ss], 2-[e, ee], 5-[e, ee], 8-[s, ss], 9-[e, ee], 12-[e, ee]
+                cout << remaining << "/" << cur.fixed_str << " + " << fill << endl;
+                stk.push({remaining, cur.fixed_str + fill}); // 0-[se/c, se/cc], 1-[e/ccs, e/ccss], 2-[""/ccsse, ""/ccssee], 5-[""/ccse, ""/ccsee], 8-[e/cs, e/css]
+                                                            // 9-[""/csse, ""/cssee], 12-[""/cse, ""/csee]
+            }
         }
     }
-
-    return out;
+    cout << "Result:" << result.print() << endl;
+    return result;
 }
 
 

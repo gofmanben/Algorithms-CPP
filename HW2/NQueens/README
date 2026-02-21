@@ -1,0 +1,49 @@
+README for N-Queens
+
+Benjamin Gofman, Jan 30, 2026
+-----------------------------------------------------
+Code files: Makefile, main.cpp, board.cpp, board.h, queens.cpp, queens.h
+Test files: simple-input.txt, simple-output.txt, Tests/more-input.txt, Tests/more-output.txt, Tests/test-5-input.txt, Tests/test-5-input.txt
+Extra files: README (this file)
+----------------------------------------------------
+This is a simple assignment, to understand the overall pipeline we will follow
+in our assignments. 
+----------------------------------------------------
+USAGE: 
+1) Run "make", to get executable "main".
+2) Run "./main <INPUT FILE> <OUTPUT FILE>"
+
+Example:
+./main simple-input.txt student-output.txt
+./main Tests/more-input.txt student-output.txt
+
+----------------------------------------------------
+This program solves the N-Queens problem using backtracking.
+It supports optional pre-placed queens given in the input file.
+The goal is to place N queens on an NxN board so that no two queens
+attack each other (same row, same column, or diagonal).
+----------------------------------------------------
+
+PROBLEM RULES:
+A queen attacks another queen if they share:
+1) the same row
+2) the same column
+3) the same diagonal
+
+A solution is an arrangement of N queens where none attack each other.
+
+----------------------------------------------------
+
+TEST OUTPUT (Java Helper):
+To view/verify an output file in a clean formatted way, a Java helper program is provided.
+Go into the Helper directory, compile the helper, and run it on an output file.
+
+Commands:
+javac PrintSolutionHelper.java
+
+Run on simple output:
+java PrintSolutionHelper ../simple-output.txt
+
+Run on more outputs:
+java PrintSolutionHelper ../Tests/more-output.txt
+java PrintSolutionHelper ../Tests/test-5-output.txt

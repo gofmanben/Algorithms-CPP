@@ -51,45 +51,35 @@ List allBubblings(string in_str)
     List result;
     stack<Pair> stk;
 
-    Pair p;
-    p.in_str = in_str;
-    p.fixed_str = "";
-    stk.push(p);
-    result.insert(in_str);
+    stk.push({in_str, ""}); // cse/""
+    result.insert(in_str);  // cse
 
-    while (!stk.empty())
-    {
-        Pair curr = stk.top();
-        stk.pop();
+    int index = 0;
+    while(!stk.empty()) {
+      Pair cur = stk.top(); // 0-[cse/""], 1-[ces/ce], 2-[sce/s], 3-[sce/se]
+      stk.pop();
 
-        string pIn_str = curr.in_str;
-        string pFixed_str = curr.fixed_str;
+      string rem = cur.in_str;             // 0-[cse, cse], 2-[sce]
+      int size1 = rem.length();            // 0-[3], 1-[3], 2-[3], 3-[3]
+      int size2 = cur.fixed_str.length();  // 0-[0], 1-[2], 2-[1], 3-[2]
 
-        int strSize = pIn_str.size();
-        int fixedSize = pFixed_str.size();
+      cout << index++ << ", " << cur.in_str << "/" << cur.fixed_str << ", size1: " << size1 << ", size2: " << size2 << endl;
 
-        for (int i = 1; i < strSize; i++)
-        {
-            // only swap strictly after the fixed prefix
-            if (i > fixedSize)
-            {
-                string next = pIn_str;
-                swap(next[i], next[i - 1]);
+      for (int i = 1; i < size1; i++) {
+        if (i <= size2) continue;
 
-                Pair nextPair;
-                nextPair.in_str = next;
+        string remaining = rem;               // copy
+        swap(remaining[i], remaining[i - 1]); // 0-[sce, ces], 2-[sec]
 
-                // extend the fixed prefix through index i-1 (prefix length becomes i)
-                nextPair.fixed_str = next.substr(0, i);
+        result.insert(remaining); // sce, ces, sec
 
-                if (result.find(next) == NULL)
-                {
-                    result.insert(next);
-                    stk.push(nextPair);
-                }
-            }
-        }
+        string fixedstr = remaining.substr(0, i); // 0-[s, ce], 2-[se]
+        cout << remaining << "/" << fixedstr << endl;
+        stk.push({remaining, fixedstr});     // 0-[sce/s, ces/ce], 2-[sce/se]
+      }
     }
+    
+    cout << "Result:" << result.print() << endl; // AFTER SORT: ces, cse, sce, sec
 
     return result;
 }

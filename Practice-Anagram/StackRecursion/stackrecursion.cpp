@@ -59,22 +59,6 @@ List allAnagrams(string input_str)
     7. Traverse through the list of sub-anagrams returned from the recursive call. 
     8. For each sub-anagram, prepend the selected element and insert the new sequence into the result list.
     */
-
-    List result;
-    return result;
-    
-
-
-
-
-
-
-
-
-
-
-
-
     /*int size = input_str.length();
 
     List result;
@@ -105,46 +89,41 @@ List allAnagrams(string input_str)
         perms.deleteList(); // free all the memory of this list
     }
     return result;*/
-/*
 
-    List list;                 // list to store all anagrams
-    stack<Pair> stk;           // explicit stack to simulate recursion
+    List result; 
+    stack<Pair> stk;
 
-    // initial state: nothing fixed, entire string remaining
-    Pair start;
-    start.in_str = input_str;
-    start.fixed_str = "";
-    stk.push(start);
+    /*Pair pair;
+    pair.in_str = input_str;
+    pair.fixed_str = "";
+    stk.push(pair);*/
+    stk.push({input_str, ""}); // cse
 
-    while (!stk.empty())
-    {
-        Pair current = stk.top();
+    int index = 0;
+    while(!stk.empty()) {
+        Pair cur = stk.top(); // 0-[cse/""], 1-[cs/e], 2-[c/es], 3-[""/esc], 4-[s/ec], 5-[""/ecs], 6-[ce/s], 7-[c/se], 8-[""/sec], 9-[e/sc]
+                              // 10-[""/sce], 11-[se/c], 12-[s/ce], 13-[""/ces], 14-[e/cs], 14-[""/cse]
         stk.pop();
 
-        // base case: no characters left to fix
-        if (current.in_str.empty())
-        {
-            list.insert(current.fixed_str);
-            continue;
-        }
-
-        // simulate recursive branching
-        for (int i = 0; i < (int)current.in_str.length(); i++)
-        {
-            Pair next;
-            next.fixed_str = current.fixed_str + current.in_str[i];
-
-            // remove character i from in_str
-            next.in_str =
-                current.in_str.substr(0, i) +
-                current.in_str.substr(i + 1);
-
-            stk.push(next);
+        string in_str = cur.in_str; // 0-[cse], 1-[cs], 2-[c], 3-[""], 4-[s], 5-[""], 6-[ce], 7-[c], 8-[""], 9-[e], 
+                                    // 10-[""], 11-[se], 12-[s], 13-[""], 14-[e], 15-[""]]
+        cout << index++ << ", " << in_str << "/" << cur.fixed_str << endl;
+        int size = in_str.length();
+        if (size == 0) {
+            result.insert(cur.fixed_str); // 3-[esc], 5[ecs], 8-[sec], 10-[sce], 13-[ces], 15-[cse] <-----
+        } else {
+            for (int i = 0; i < size; i++) {
+                char ch = in_str[i]; // 0-[c, s, e], 1-[c, s], 2-[c], 4-[s], 6-[c, e], 7-[c], 9-[e], 11-[s, e], 12-[s], 14-[e]
+                string remaining = in_str.substr(0, i) + in_str.substr(i + 1); // 0-[se, ce, cs], 1-[s, c], 2-[""], 4-[""], 6-[e, c], 7-[""], 9-[""]
+                                                                               // 11-[e, s], 12-[""], 14-[""]
+                cout << remaining << "/" << cur.fixed_str << " + " << ch << endl;
+                stk.push({remaining, cur.fixed_str + ch}); // 0-[se/c, ce/s, cs/e], 1-[s/ec, c/es], 2-[""/esc], 4-[""/ecs], 6-[e/sc, c/se], 7-[""/sec], 
+                                                           // 9-[""/sce], 11-[e/cs, s/ce], 12-[""/ces], 14-[""/cse]
+            }
         }
     }
-
-    return list;
-    */
+    cout << "Result:" << result.print() << endl;
+    return result;
 }
 
 

@@ -1,0 +1,44 @@
+# Word Range Counter - AVL Tree Implementation
+Benjamin Gofman, Feb 2026
+
+*****
+
+This program implements an AVL (self-balancing) Binary Search Tree data structure to store words and perform range queries. The program reads an input file containing insert operations and range queries, processes them, and writes the results to an output file.
+
+## Files Included
+- `bst.h` - Header file containing Node and BST class declarations with AVL support
+- `bst.cpp` - Implementation of BST/AVL operations
+- `main.cpp` - Main program that handles file I/O and command processing
+- `Makefile` - Build instructions
+- `README.md` - This file
+
+## Data Structure
+- **AVL Tree**: Self-balancing binary search tree
+- **No Duplicates**: Each word appears only once in the tree
+- **Subtree Sizes**: Each node stores size of its subtree for O(log n) range queries
+- **Balanced**: Maintains balance factor ≤ 1 for efficient operations
+
+USAGE (in Wordrange folder):
+1) Run "make", to get executable "main".
+2) Run "./main <INPUT FILE> <OUTPUT FILE>"
+   
+   Run "make clean" to delete executable and object files. A good practice to do this after changing code.
+
+----------------------------------------------------
+
+### Input/output ###
+
+The following explains the input/output format.
+
+I/O:
+
+The input file should have a series of operations in each line. Each line is of the form:
+
+i <word>: insert <word> inserts a word into the AVL tree with O(log n) time
+r <word1> <word2>: counts and outputs the number of words in the AVL tree that are lexicographically between word1 and word2 (inclusive)
+
+All the printing is done in the <OUTPUT FILE> provided as a command line argument. 
+
+Additionally, every command processed is printed to the console. Every printing is also done in the console.
+
+----------------------------------------------------

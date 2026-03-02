@@ -1,0 +1,40 @@
+## README for Range Query in BST ## 
+Benjamin Gofman, Feb 2026
+
+*****
+
+### Instructions ###
+
+The folder contains an implementation of a binary search tree (BST) that stores strings (words).
+The BST supports insertions and range queries.
+
+In the directory, you will see the following files:
+Makefile, bst.cpp, bst.h, main.cpp
+
+The file bst.h has the declaration for the BST class and the rangeCount function.
+The bst.cpp file has the implementation of the BST, including the rangeCount function.
+
+USAGE (in Wordrange folder):
+1) Run "make", to get executable "main".
+2) Run "./main <INPUT FILE> <OUTPUT FILE>"
+   
+   Run "make clean" to delete executable and object files. A good practice to do this after changing code.
+
+----------------------------------------------------
+
+### Input/output ###
+
+The following explains the input/output format.
+
+I/O:
+
+The input file should have a series of operations in each line. Each line is of the form:
+
+i <word>: insert <word> into BST (if not already present)
+r <word1> <word2>: count and output the number of words in the BST that are between word1 and word2 (inclusive)
+
+All the printing is done in the <OUTPUT FILE> provided as a command line argument. 
+
+Additionally, every command processed is printed to the console. Every printing is also done in the console.
+
+----------------------------------------------------

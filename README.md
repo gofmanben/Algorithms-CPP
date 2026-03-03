@@ -1,10 +1,7 @@
 # CSE101 Test 4 Practice – All Problems with Two Pseudocode Solutions
 
-This repository is based on the collaborative study document for Test 4:
-[Test 4 Questions Intuition Collaboration.pdf](Test-4/Test%204%20Questions%20Intuition%20Collaboration.pdf).
 
-Using that document as a foundation, I created a structured preparation guide:
-[Test 4 Questions Intuition Collaboration – My Solutions.pdf](Test-4/Test%204%20Questions%20Intuition%20Collaboration%20my%20solutions.pdf).
+I created a structured preparation guide: [Test 4 Questions Intuition Collaboration – My Solutions.pdf](Test-4/Test%204%20Questions%20Intuition%20Collaboration%20my%20solutions.pdf).
 
 For each problem, the guide includes:
 

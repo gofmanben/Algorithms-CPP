@@ -88,41 +88,51 @@ https://youtu.be/KLlXCFG5TnA
 
 Solution 1 (Brute Force)
 
-```text
-TwoSumExists_Brute(A, x): for i in 0..len(A)-1:
-for j in i+1..len(A)-1: if A[i] + A[j] == x:
-return true
-return false
+```python
+TwoSumExists_Brute(A, x): 
+    for i in 0..len(A)-1:
+        for j in i+1..len(A)-1: 
+            if A[i] + A[j] == x:
+                return true
+    return false
 ```
 
-Total time: O(n^2)
-
-Extra space: O(1)
+- **Total time**: O(n^2)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
-TwoSumExists(A, x): sort(A)
-l = 0; r = len(A)-1 while l < r:
-s = A[l] + A[r]
-if s == x: return true if s < x: l += 1
-else: r -= 1 return false
+```python
+TwoSumExists(A, x): 
+    sort(A)
+    l = 0; r = len(A)-1
+    while l < r:
+        s = A[l] + A[r]
+        if s == x: return true 
+        if s < x: l += 1
+        else: r -= 1
+    return false
 ```
 
-```text
-TwoSumClosestPair(A, x): sort(A)
-l = 0; r = len(A)-1 bestPair = (A[l], A[r])
-bestDiff = abs((A[l]+A[r]) - x) while l < r:
-s = A[l] + A[r]
-if abs(s - x) < bestDiff: bestDiff = abs(s - x) bestPair = (A[l], A[r])
-if s < x: l += 1
-else if s > x: r -= 1 else: break
-return bestPair
+```python
+TwoSumClosestPair(A, x):
+    sort(A)
+    l = 0; r = len(A)-1 
+    bestPair = (A[l], A[r])
+    bestDiff = abs((A[l]+A[r]) - x) 
+    while l < r:
+        s = A[l] + A[r]
+        if abs(s - x) < bestDiff: 
+            bestDiff = abs(s - x) 
+            bestPair = (A[l], A[r])
+        if s < x: l += 1
+        else if s > x: r -= 1
+        else: break
+    return bestPair
 ```
 
-Total time: O(n log n)
-
-Extra space: O(1) (ignoring sort recursion)
+- **Total time**: O(n log n)
+- **Extra space**: O(1) (ignoring sort recursion)
 
 ---
 
@@ -136,54 +146,59 @@ Find the median of the union of 2 sorted arrays
 
 Solution 1 (Brute Force)
 
-```text
-MedianTwoSorted_Merge(A, B): i = 0; j = 0
-M = empty list
-while i < len(A) and j < len(B): if A[i] <= B[j]:
-append(M, A[i]); i += 1 else:
-append(M, B[j]); j += 1
-while i < len(A): append(M, A[i]); i += 1 while j < len(B): append(M, B[j]); j += 1
+```python
+MedianTwoSorted_Merge(A, B): 
+    i = 0; j = 0
+    M = empty list
+    while i < len(A) and j < len(B): 
+        if A[i] <= B[j]:
+            append(M, A[i]); i += 1
+        else:
+            append(M, B[j]); j += 1
+        while i < len(A): append(M, A[i]); i += 1 
+        while j < len(B): append(M, B[j]); j += 1
+    
+    n = len(M)
+    if n % 2 == 1: return M[n//2] 
+    return (M[n//2 - 1] + M[n//2]) / 2
 ```
 
-```text
-n = len(M)
-if n % 2 == 1: return M[n//2] return (M[n//2 - 1] + M[n//2]) / 2
-```
-
-Total time: O(n+m)
-
-Extra space: O(n+m)
+- **Total time**: O(n+m)
+- **Extra space**: O(n+m)
 
 Solution 2 (Improved)
 
-```text
+```python
 MedianTwoSorted(A, B):
-if len(A) > len(B): swap(A, B) n = len(A); m = len(B)
-total = n + m
-half = (total + 1) // 2
+    if len(A) > len(B): 
+        swap(A, B) 
+        n = len(A); m = len(B)
+        total = n + m
+        half = (total + 1) // 2
+
+        lo = 0; hi = n
+        while lo <= hi:
+            i = (lo + hi) // 2
+            j = half - i
+
+            Aleft  = -INF if i == 0 else A[i-1] 
+            Aright = +INF if i == n else A[i] 
+            Bleft  = -INF if j == 0 else B[j-1] 
+            Bright = +INF if j == m else B[j]
+
+            if Aleft <= Bright and Bleft <= Aright: 
+                if total % 2 == 1:
+                    return max(Aleft, Bleft)
+                else:
+                    return (max(Aleft, Bleft) + min(Aright, Bright)) / 2 
+                else if Aleft > Bright:
+                    hi = i - 1
+                else:
+                    lo = i + 1
 ```
 
-```text
-lo = 0; hi = n while lo <= hi:
-i = (lo + hi) // 2
-j = half - i
-```
-
-```text
-Aleft	= -INF if i == 0 else A[i-1] Aright = +INF if i == n else A[i] Bleft	= -INF if j == 0 else B[j-1] Bright = +INF if j == m else B[j]
-```
-
-```text
-if Aleft <= Bright and Bleft <= Aright: if total % 2 == 1:
-return max(Aleft, Bleft) else:
-return (max(Aleft, Bleft) + min(Aright, Bright)) / 2 else if Aleft > Bright:
-hi = i - 1 else:
-lo = i + 1
-```
-
-Total time: O(log min(n,m))
-
-Extra space: O(1)
+- **Total time**: O(log min(n,m))
+- **Extra space**: O(1)
 
 ---
 
@@ -197,51 +212,52 @@ K-th Element of Merged Two Sorted Arrays: https://www.geeksforgeeks.org/k-th-ele
 
 Solution 1 (Brute Force)
 
-```text
-KthTwoSorted_MergeUntil(A, B, k): i = 0; j = 0
-count = 0
-while i < len(A) or j < len(B):
-if j == len(B) or (i < len(A) and A[i] <= B[j]): val = A[i]; i += 1
-else:
-val = B[j]; j += 1 count += 1
-if count == k: return val
+```python
+KthTwoSorted_MergeUntil(A, B, k): 
+    i = 0; j = 0
+    count = 0
+    while i < len(A) or j < len(B):
+        if j == len(B) or (i < len(A) and A[i] <= B[j]): 
+            val = A[i]; i += 1
+        else:
+            val = B[j]; j += 1 
+        count += 1
+        if count == k:
+            return val
 ```
 
-Total time: O(k) 	or worst O(n+m)
-
-Extra space: O(1)
+- **Total time**: O(k) 	or worst O(n+m)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 KthTwoSorted(A, B, k):
-if len(A) > len(B): swap(A, B) n = len(A); m = len(B)
+    if len(A) > len(B):
+        swap(A, B) 
+        n = len(A); m = len(B)
+        lo = max(0, k - m) 
+        hi = min(k, n)
+
+        while lo <= hi:
+            i = (lo + hi) // 2
+            j = k - i
+
+            Aleft	= -INF if i == 0 else A[i-1] 
+            Aright = +INF if i == n else A[i] 
+            Bleft	= -INF if j == 0 else B[j-1] 
+            Bright = +INF if j == m else B[j]
+
+            if Aleft <= Bright and Bleft <= Aright: 
+                return max(Aleft, Bleft)
+            else if Aleft > Bright:
+                hi = i - 1
+            else:
+                lo = i + 1
 ```
 
-```text
-lo = max(0, k - m) hi = min(k, n)
-```
-
-```text
-while lo <= hi:
-i = (lo + hi) // 2
-j = k - i
-```
-
-```text
-Aleft	= -INF if i == 0 else A[i-1] Aright = +INF if i == n else A[i] Bleft	= -INF if j == 0 else B[j-1] Bright = +INF if j == m else B[j]
-```
-
-```text
-if Aleft <= Bright and Bleft <= Aright: return max(Aleft, Bleft)
-else if Aleft > Bright: hi = i - 1
-else:
-lo = i + 1
-```
-
-Total time: O(log min(n,m))
-
-Extra space: O(1)
+- **Total time**: O(log min(n,m))
+- **Extra space**: O(1)
 
 ---
 
@@ -255,48 +271,48 @@ Above 2 questions for L sorted arrays
 
 Solution 1 (Brute Force)
 
-```text
+```python
 FlattenAndSortMedian(Arrays):
-M = empty list
-for each arr in Arrays: for each x in arr:
-append(M, x)
-sort(M)
-n = len(M)
-if n % 2 == 1: return M[n//2] return (M[n//2 - 1] + M[n//2]) / 2
+    M = empty list
+    for each arr in Arrays: 
+        for each x in arr:
+            append(M, x)
+    sort(M)
+    n = len(M)
+    if n % 2 == 1: return M[n//2] 
+    return (M[n//2 - 1] + M[n//2]) / 2
 ```
 
-Total time: O(N log N)
-
-Extra space: O(N)
+- **Total time**: O(N log N)
+- **Extra space**: O(N)
 
 Solution 2 (Improved)
 
-```text
+```python
 KthLSorted(Arrays, k):
-heap = empty min-heap of (value, arrayId, index) for t in 0..L-1:
-if len(Arrays[t]) > 0:
-push(heap, (Arrays[t][0], t, 0))
+    heap = empty min-heap of (value, arrayId, index) 
+        for t in 0..L-1:
+            if len(Arrays[t]) > 0:
+                push(heap, (Arrays[t][0], t, 0))
+
+        count = 0
+        while heap not empty:
+            (v, t, i) = popMin(heap) count += 1
+            if count == k: return v
+            if i + 1 < len(Arrays[t]):
+                push(heap, (Arrays[t][i+1], t, i+1))
+
+MedianLSorted(Arrays): 
+    N = sum of lengths 
+    if N % 2 == 1:
+        return KthLSorted(Arrays, (N+1)//2)
+    a = KthLSorted(Arrays, N//2)
+    b = KthLSorted(Arrays, N//2 + 1) 
+    return (a + b) / 2
 ```
 
-```text
-count = 0
-while heap not empty:
-(v, t, i) = popMin(heap) count += 1
-if count == k: return v
-if i + 1 < len(Arrays[t]):
-push(heap, (Arrays[t][i+1], t, i+1))
-```
-
-```text
-MedianLSorted(Arrays): N = sum of lengths if N % 2 == 1:
-return KthLSorted(Arrays, (N+1)//2)
-a = KthLSorted(Arrays, N//2)
-b = KthLSorted(Arrays, N//2 + 1) return (a + b) / 2
-```
-
-Total time: Kth: O(k log L);     Median worst O(N log L)
-
-Extra space: O(L) heap
+- **Total time**: Kth: O(k log L);     **Median worst** O(N log L)
+- **Extra space**: O(L) heap
 
 ---
 
@@ -312,6 +328,7 @@ We discussed in class how to merge two sorted arrays. What about merging k sorte
 
 Solution 1 (Brute Force)
 
+```python
 MergeKLists(lists):
     if lists is empty: return null
     while number of lists > 1:
@@ -322,12 +339,14 @@ MergeKLists(lists):
             temp.append( MergeTwoLists(l1, l2) )
         lists = temp
     return lists[0]
+```
 
-Total time: O(totalNodes · L) in the worst case (unbalanced / sequential accumulation)
-Extra space: O(1) auxiliary (if reusing nodes) + output (already exists)
+- **Total time**: O(totalNodes · L) in the worst case (unbalanced / sequential accumulation)
+- **Extra space**: O(1) auxiliary (if reusing nodes) + output (already exists)
 
 Solution 2 (Improved)
 
+```python
 MergeKLists(lists):
     if lists is empty: return null
     while number of lists > 1:
@@ -352,9 +371,9 @@ MergeTwoLists(l1, l2):
         tail = tail.next
     tail.next = l1 if l1 != null else l2
     return dummy.next
-
-Total time: O(totalNodes log L)
-Extra space: O(L) for temp
+```
+- **Total time**: O(totalNodes log L)
+- **Extra space**: O(L) for temp
 
 ---
 
@@ -368,27 +387,31 @@ You have an unsorted array of integers where every integer appears exactly twice
 
 Solution 1 (Brute Force)
 
-```text
+```python
 UniqueOnce_Brute(A):
-for i in 0..len(A)-1: count = 0
-for j in 0..len(A)-1:
-if A[j] == A[i]: count += 1
-if count == 1: return A[i]
+    for i in 0..len(A)-1: 
+        count = 0
+        for j in 0..len(A)-1:
+            if A[j] == A[i]: 
+                count += 1
+            if count == 1: return A[i]
 ```
 
-Total time: O(n^2)
-Extra space: O(1)
+- **Total time**: O(n^2)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
-UniqueOnce(A): ans = 0
-for x in A:
-ans = ans XOR x return ans
+```python
+UniqueOnce(A): 
+    ans = 0
+    for x in A:
+        ans = ans XOR x 
+    return ans
 ```
 
-Total time: O(n) 
-Extra space: O(1)
+- **Total time**: O(n) 
+- **Extra space**: O(1)
 
 ---
 
@@ -403,34 +426,36 @@ https://neetcode.io/problems/maximum-subarray
 
 Solution 1 (Brute Force)
 
-```text
-MaxSubarray_Brute(A): best = -INF
-for i in 0..len(A)-1: s = 0
-for j in i..len(A)-1: s += A[j]
-if s > best:
-best = s
-bestL = i; bestR = j return (best, bestL, bestR)
+```python
+MaxSubarray_Brute(A): 
+    best = -INF
+    for i in 0..len(A)-1: 
+        s = 0
+        for j in i..len(A)-1: 
+            s += A[j]
+            if s > best:
+                best = s
+                bestL = i; bestR = j 
+    return (best, bestL, bestR)
 ```
 
-Total time: O(n^2) 
-Extra space: O(1)
+- **Total time**: O(n^2) 
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 MaxSubarray_Kadane(A):
-cur = best = A[0]
+    cur = best = A[0]
+
+    for i = 1 to len(A)-1:
+        cur = max(A[i], cur + A[i])
+        best = max(best, cur)
+    return best
 ```
 
-```text
-for i = 1 to len(A)-1:
-   cur = max(A[i], cur + A[i])
-   best = max(best, cur)
- return best
-```
-
-Total time: O(n) 
-Extra space: O(1)
+- **Total time**: O(n) 
+- **Extra space**: O(1)
 
 ---
 
@@ -447,52 +472,63 @@ https://www.youtube.com/watch?v=5rRJw5hFVks or https://www.youtube.com/watch?v=W
 
 Solution 1 (Brute Force)
 
-```text
-NearestGreater_Brute(A): n = len(A)
-ans = array size n filled -1 for i in 0..n-1:
-bestDist = +INF bestJ = -1
-for j in 0..n-1:
-if j != i and A[j] > A[i]: d = abs(j - i)
-if d < bestDist: bestDist = d bestJ = j
-ans[i] = bestJ return ans
+```python
+NearestGreater_Brute(A): 
+    n = len(A)
+    ans = array size n filled -1 
+    for i in 0..n-1:
+        bestDist = +INF 
+        bestJ = -1
+        for j in 0..n-1:
+            if j != i and A[j] > A[i]: 
+                d = abs(j - i)
+                if d < bestDist: 
+                    bestDist = d 
+                    bestJ = j
+        ans[i] = bestJ 
+    return ans
 ```
 
-Total time: O(n²)
-
-Extra space: O(n) output
+- **Total time**: O(n²)
+- **Extra space**: O(n) output
 
 Solution 2 (Improved)
 
-```text
-NearestGreater(A): n = len(A)
-left = array size n filled -1 right = array size n filled -1
+```python
+NearestGreater(A): 
+    n = len(A)
+    left = array size n filled -1 
+    right = array size n filled -1
+
+    stack = empty stack	# indices, strictly decreasing values 
+    for i in 0..n-1:
+        while stack not empty and A[stack.top] <= A[i]: 
+            stack.pop()
+        left[i] = stack.top 
+        if stack not empty else -1 
+        stack.push(i)
+
+        stack = empty stack
+        for i in n-1 down to 0:
+            while stack not empty and A[stack.top] <= A[i]: 
+                stack.pop()
+            right[i] = stack.top if stack not empty else -1 
+            stack.push(i)
+
+        ans = array size n filled -1 
+        for i in 0..n-1:
+            L = left[i]; R = right[i]
+            if L == -1 and R == -1: ans[i] = -1 
+            else if L == -1: ans[i] = R
+            else if R == -1: ans[i] = L 
+            else:
+                if (i - L) <= (R - i): ans[i] = L 
+                else: ans[i] = R
+    return ans
 ```
 
-```text
-stack = empty stack	# indices, strictly decreasing values for i in 0..n-1:
-while stack not empty and A[stack.top] <= A[i]: stack.pop()
-left[i] = stack.top if stack not empty else -1 stack.push(i)
-```
-
-```text
-stack = empty stack
-for i in n-1 down to 0:
-while stack not empty and A[stack.top] <= A[i]: stack.pop()
-right[i] = stack.top if stack not empty else -1 stack.push(i)
-```
-
-```text
-ans = array size n filled -1 for i in 0..n-1:
-L = left[i]; R = right[i]
-if L == -1 and R == -1: ans[i] = -1 else if L == -1: ans[i] = R
-else if R == -1: ans[i] = L else:
-if (i - L) <= (R - i): ans[i] = L else: ans[i] = R
-return ans
-```
-
-Total time: O(n)
-
-Extra space: O(n) (stack + output)
+- **Total time**: O(n)
+- **Extra space**: O(n) (stack + output)
 
 ---
 
@@ -506,33 +542,36 @@ Given an array of integers, move all the zeros to the right end. The order of th
 
 Solution 1 (Brute Force)
 
-```text
+```python
 MoveZeros_Brute(A):
-# repeatedly find a zero and swap it rightward one step at a time n = len(A)
-changed = true while changed:
-changed = false for i in 0..n-2:
-if A[i] == 0 and A[i+1] != 0: swap(A[i], A[i+1]) changed = true
+    # repeatedly find a zero and swap it rightward one step at a time 
+    n = len(A)
+    changed = true 
+    while changed:
+        changed = false 
+        for i in 0..n-2:
+            if A[i] == 0 and A[i+1] != 0: 
+                swap(A[i], A[i+1]) 
+                changed = true
 ```
 
-Total time: O(n^2)
-
-Extra space: O(1)
+- **Total time**: O(n^2)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 MoveZeros(A):
-left = 0
-for right = 0 to len(A) - 1:
-   if A[right] ≠ 0:
-swap(A[right], A[left])
-left = left + 1
-  return A
+    left = 0
+    for right = 0 to len(A) - 1:
+        if A[right] ≠ 0:
+            swap(A[right], A[left])
+            left = left + 1
+    return A
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 ---
 
@@ -546,73 +585,51 @@ Given an array of integers, reorder so that all the negative integers appear fir
 
 Solution 1 (Brute Force)
 
+```python
 StableReorderBySign(A):
+    n = length(A)
+    write = 0
 
-n = length(A)
+    # 1) Move negatives to front (stable)
+    for i from 0 to n-1:
+        if A[i] < 0:
+            temp = A[i]
+            j = i
+            while j > write:
+                A[j] = A[j-1]
+                j = j - 1
+            A[write] = temp
+            write = write + 1
 
-write = 0
+    write2 = write
 
-# 1) Move negatives to front (stable)
+    # 2) Move zeros after negatives (stable)
+    for i from write to n-1:
+        if A[i] == 0:
+            temp = A[i]
+            j = i
+            while j > write2:
+                A[j] = A[j-1]
+                j = j - 1
+            A[write2] = temp
+            write2 = write2 + 1
+    return A
+```
 
-for i from 0 to n-1:
-
-if A[i] < 0:
-
-temp = A[i]
-
-j = i
-
-while j > write:
-
-A[j] = A[j-1]
-
-j = j - 1
-
-A[write] = temp
-
-write = write + 1
-
-write2 = write
-
-# 2) Move zeros after negatives (stable)
-
-for i from write to n-1:
-
-if A[i] == 0:
-
-temp = A[i]
-
-j = i
-
-while j > write2:
-
-A[j] = A[j-1]
-
-j = j - 1
-
-A[write2] = temp
-
-write2 = write2 + 1
-
-return A
-
-Total time: O(n²) worst case
-
-Extra space: O(1)
+- **Total time**: O(n²) worst case
+- **Extra space**: O(1)
 
 Solution 2 (Faster time, but violates O(1) space constraint)
 
-Create three lists: neg, zero, pos
+```python
+    Create three lists: neg, zero, pos
+    Loop once through A:
+        append to appropriate list
+    Overwrite A with neg + zero + pos
+```
 
-Loop once through A:
-
-append to appropriate list
-
-Overwrite A with neg + zero + pos
-
-Total time: O(n)
-
-Extra space: O(n)
+- **Total time**: O(n)
+- **Extra space**: O(n)
 
 ---
 
@@ -626,58 +643,50 @@ You have a stream of numbers. Implement an algorithm to return the median of the
 
 Solution 1 (Brute Force)
 
+```python
 StreamMedian_Brute():
+    A = empty list
+    insert(x):
+        append(A, x)
+        sort(A)
 
-A = empty list
+    getMedian():
+        n = len(A)
+        if n % 2 == 1:
+            return A[n//2]
+        else:
+            return (A[n//2 - 1] + A[n//2]) / 2
+```
 
-insert(x):
-
-append(A, x)
-
-sort(A)
-
-getMedian():
-
-n = len(A)
-
-if n % 2 == 1:
-
-return A[n//2]
-
-else:
-
-return (A[n//2 - 1] + A[n//2]) / 2
-
-Total time: O(n log n), median O(1) 
-Extra space: O(n)
+- **Total time**: O(n log n), median O(1) 
+- **Extra space**: O(n)
 
 Solution 2 (Improved)
 
-```text
+```python
 StreamMedian():
-maxHeap = empty max-heap	# lower half minHeap = empty min-heap	# upper half
+    maxHeap = empty max-heap	# lower half 
+    minHeap = empty min-heap	# upper half
+
+    insert(x):
+        if maxHeap empty or x <= maxHeap.top: 
+            maxHeap.push(x)
+        else:
+            minHeap.push(x)
+
+        if maxHeap.size > minHeap.size + 1: 
+            minHeap.push(maxHeap.popTop())
+        if minHeap.size > maxHeap.size: 
+            maxHeap.push(minHeap.popTop())
+
+    getMedian():
+        if maxHeap.size == minHeap.size:
+            return (maxHeap.top + minHeap.top) / 2 
+        return maxHeap.top
 ```
 
-```text
-insert(x):
-if maxHeap empty or x <= maxHeap.top: maxHeap.push(x)
-else:
-minHeap.push(x)
-```
-
-```text
-if maxHeap.size > minHeap.size + 1: minHeap.push(maxHeap.popTop())
-if minHeap.size > maxHeap.size: maxHeap.push(minHeap.popTop())
-```
-
-```text
-getMedian():
-if maxHeap.size == minHeap.size:
-return (maxHeap.top + minHeap.top) / 2 return maxHeap.top
-```
-
-Total time: insert: O(log n), median O(1) 
-Extra space: O(n)
+- **Total time**: insert: O(log n), median O(1) 
+- **Extra space**: O(n)
 
 ---
 
@@ -691,26 +700,26 @@ A majority element in an array is an element that appears more than n/2 times (w
 
 Solution 1 (Brute Force)
 
-```text
+```python
 Majority_Brute(A):
-for i in 0..len(A)-1: count = 0
-for j in 0..len(A)-1:
-if A[j] == A[i]: count += 1 if count > len(A)/2: return A[i]
-return NONE
+    for i in 0..len(A)-1: 
+        count = 0
+        for j in 0..len(A)-1:
+            if A[j] == A[i]: count += 1 
+        if count > len(A)/2: return A[i]
+    return NONE
 ```
 
-Total time: O(n^2) 
-Extra space: O(1)
+- **Total time**: O(n^2) 
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 MajorityOverHalf(A):
     cand = NONE
     count = 0
-```
 
-```text
     # Phase 1: Find candidate
     for each x in A:
         if count == 0:
@@ -720,27 +729,21 @@ MajorityOverHalf(A):
             count += 1
         else:
             count -= 1
-```
 
-```text
     # Phase 2: Verify candidate
     occurrences = 0
     for each x in A:
         if x == cand:
             occurrences += 1
-```
 
-```text
     if occurrences > len(A) // 2:
         return cand
     else:
         return NONE
 ```
 
-```text
-Total time: O(n)
-Extra space: O(1)
-```
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 ---
 
@@ -756,46 +759,47 @@ Try doing it using O(1) memory. What if two elements were missing?
 
 Solution 1 (Brute Force)
 
-```text
-MissingOne_Brute(A, n): for v in 1..n:
-found = false for x in A:
-if x == v: found = true if not found: return v
+```python
+MissingOne_Brute(A, n): 
+    for v in 1..n:
+        found = false 
+        for x in A:
+            if x == v: found = true 
+        if not found: return v
 ```
 
-Total time: O(n^2)
-
-Extra space: O(1)
+- **Total time**: O(n^2)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
-MissingOne(A, n): expected = n*(n+1)/2 actual = 0
-for x in A: actual += x return expected - actual
-```
+```python
+MissingOne(A, n): 
+    expected = n*(n+1)/2 
+    actual = 0
+    for x in A: actual += x 
+    return expected - actual
 
-```text
 MissingTwo(A, n):
-# uses sum and sum of squares S	= n*(n+1)/2
-SQ = n*(n+1)*(2*n+1)/6 s	= 0
-sq = 0
-for x in A:
-s	+= x sq += x*x
+    # uses sum and sum of squares 
+    S	= n*(n+1)/2
+    SQ = n*(n+1)*(2*n+1)/6 s	= 0
+    sq = 0
+    for x in A:
+        s	+= x sq += x*x
+
+    a_plus_b = S - s a2_plus_b2 = SQ - sq
+    ab2 = (a_plus_b*a_plus_b - a2_plus_b2) / 2	# equals a*b
+
+    # solve t^2 - (a_plus_b)t + ab2 = 0 
+    disc = a_plus_b*a_plus_b - 4*ab2
+    a = (a_plus_b + sqrt(disc)) / 2
+    b = a_plus_b - a 
+    return (a, b)
 ```
 
-```text
-a_plus_b = S - s a2_plus_b2 = SQ - sq
-ab2 = (a_plus_b*a_plus_b - a2_plus_b2) / 2	# equals a*b
-```
-
-```text
-# solve t^2 - (a_plus_b)t + ab2 = 0 disc = a_plus_b*a_plus_b - 4*ab2
-a = (a_plus_b + sqrt(disc)) / 2
-b = a_plus_b - a return (a, b)
-```
-
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 ---
 
@@ -809,39 +813,42 @@ Given an array of integers, determine if it contains a Pythagorean triple (integ
 
 Solution 1 (Brute Force)
 
-```text
+```python
 HasPythagoreanTriple_Brute(A): n = len(A)
-for i in 0..n-1:
-for j in i+1..n-1:
-for k in j+1..n-1:
-a = A[i]; b = A[j]; c = A[k]
-if a*a + b*b == c*c: return true if a*a + c*c == b*b: return true if b*b + c*c == a*a: return true
-return false
+    for i in 0..n-1:
+        for j in i+1..n-1:
+            for k in j+1..n-1:
+                a = A[i]; b = A[j]; c = A[k]
+                if a*a + b*b == c*c: return true 
+                if a*a + c*c == b*b: return true 
+                if b*b + c*c == a*a: return true
+    return false
 ```
 
-Total time: O(n^3)
-
-Extra space: O(1)
+- **Total time**: O(n^3)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 HasPythagoreanTriple(A):
-B = empty list
-for x in A: append(B, x*x) sort(B)
+    B = empty list
+    for x in A: append(B, x*x) 
+    sort(B)
+
+    n = len(B)
+    for c in n-1 down to 0: 
+        l = 0; r = c-1 
+        while l < r:
+            s = B[l] + B[r]
+            if s == B[c]: return true 
+            if s < B[c]: l += 1
+            else: r -= 1 
+    return false
 ```
 
-```text
-n = len(B)
-for c in n-1 down to 0: l = 0; r = c-1 while l < r:
-s = B[l] + B[r]
-if s == B[c]: return true if s < B[c]: l += 1
-else: r -= 1 return false
-```
-
-Total time: O(n^2)
-
-Extra space: O(n) (squared array)
+- **Total time**: O(n^2)
+- **Extra space**: O(n) (squared array)
 
 ---
 
@@ -855,37 +862,44 @@ The input is a sequence of ranges [x1, y1], [x2, y2], . . . (where each xi ≤ y
 
 Solution 1 (Brute Force)
 
-```text
-MergeRanges_Brute(R): changed = true while changed:
-changed = false
-for i in 0..len(R)-1:
-for j in i+1..len(R)-1:
-if R[i] intersects R[j]: R[i] = union(R[i], R[j]) delete R[j]
-changed = true break
-if changed: break
-return R
+```python
+MergeRanges_Brute(R): 
+    changed = true 
+    while changed:
+    changed = false
+    for i in 0..len(R)-1:
+        for j in i+1..len(R)-1:
+            if R[i] intersects R[j]: 
+                R[i] = union(R[i], R[j]) 
+                delete R[j]
+                changed = true 
+                break
+        if changed: break
+    return R
 ```
 
-Total time: O(k^2) merges (can be worse with deletes)
-
-Extra space: O(1) extra (in-place list edits)
+- **Total time**: O(k^2) merges (can be worse with deletes)
+- **Extra space**: O(1) extra (in-place list edits)
 
 Solution 2 (Improved)
 
-```text
+```python
 MergeRanges(R):
-sort R by start increasing out = empty list
-cur = R[0]
-for i in 1..len(R)-1:
-if R[i].start <= cur.end:
-cur.end = max(cur.end, R[i].end) else:
-append(out, cur) cur = R[i]
-append(out, cur) return out
+    sort R by start increasing 
+    out = empty list
+    cur = R[0]
+    for i in 1..len(R)-1:
+        if R[i].start <= cur.end:
+            cur.end = max(cur.end, R[i].end) 
+        else:
+            append(out, cur) 
+            cur = R[i]
+    append(out, cur) 
+    return out
 ```
 
-Total time: O(k log k)
-
-Extra space: O(k) output
+- **Total time**: O(k log k)
+- **Extra space**: O(k) output
 
 ---
 
@@ -899,34 +913,38 @@ Given three arrays in non-decreasing order, find the elements that are common to
 
 Solution 1 (Brute Force)
 
-```text
-Common3_Brute(A, B, C): out = empty list for x in A:
-if x in B and x in C: append(out, x)
-return out
+```python
+Common3_Brute(A, B, C): 
+    out = empty list 
+    for x in A:
+        if x in B and x in C: 
+            append(out, x)
+    return out
 ```
 
-Total time: O(n1*(n2+n3)) (if linear membership)
-
-Extra space: O(1) extra + output
+- **Total time**: O(n1*(n2+n3)) (if linear membership)
+- **Extra space**: O(1) extra + output
 
 Solution 2 (Improved)
 
-```text
+```python
 Common3(A, B, C):
-i = 0; j = 0; k = 0
-out = empty list
-while i < len(A) and j < len(B) and k < len(C): if A[i] == B[j] and B[j] == C[k]:
-append(out, A[i])
-i += 1; j += 1; k += 1
-else:
-mn = min(A[i], B[j], C[k]) if A[i] == mn: i += 1
-if B[j] == mn: j += 1 if C[k] == mn: k += 1
-return out
+    i = 0; j = 0; k = 0
+    out = empty list
+    while i < len(A) and j < len(B) and k < len(C): 
+        if A[i] == B[j] and B[j] == C[k]:
+            append(out, A[i])
+            i += 1; j += 1; k += 1
+        else:
+            mn = min(A[i], B[j], C[k]) 
+            if A[i] == mn: i += 1
+            if B[j] == mn: j += 1 
+            if C[k] == mn: k += 1
+    return out
 ```
 
-Total time: O(n1+n2+n3)
-
-Extra space: O(1) extra + output
+- **Total time**: O(n1+n2+n3)
+- **Extra space**: O(1) extra + output
 
 ---
 
@@ -940,35 +958,39 @@ https://www.youtube.com/watch?v=0p-A4Qt9zAQ
 
 Solution 1 (Brute Force)
 
-```text
+```python
 ExtraElement_Linear(A, B):
-# assume len(A) = len(B)+1; if not, swap if len(B) > len(A): swap(A, B)
-i = 0
-while i < len(B):
-if A[i] != B[i]:
-return (A[i], i) i += 1
-return (A[len(A)-1], len(A)-1)
+    # assume len(A) = len(B)+1; if not, swap 
+    if len(B) > len(A): swap(A, B)
+    i = 0
+    while i < len(B):
+        if A[i] != B[i]:
+            return (A[i], i) 
+        i += 1
+    return (A[len(A)-1], len(A)-1)
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 ExtraElement_Binary(A, B):
-if len(B) > len(A): swap(A, B)
-lo = 0; hi = len(B)	# search first mismatch position while lo < hi:
-mid = (lo + hi) // 2 if A[mid] == B[mid]: lo = mid + 1
-else:
-hi = mid
-# lo is first mismatch index return (A[lo], lo)
+    if len(B) > len(A): swap(A, B)
+    lo = 0; hi = len(B)	# search first mismatch position 
+    while lo < hi:
+        mid = (lo + hi) // 2 
+        if A[mid] == B[mid]: 
+            lo = mid + 1
+        else:
+            hi = mid
+    # lo is first mismatch index 
+    return (A[lo], lo)
 ```
 
-Total time: O(log n)
-
-Extra space: O(1)
+- **Total time**: O(log n)
+- **Extra space**: O(1)
 
 ---
 
@@ -982,35 +1004,40 @@ Given a sorted array, find the closest element (in terms of absolute difference)
 
 Solution 1 (Brute Force)
 
-```text
-ClosestSorted_Brute(A, x): best = A[0]
-bestDiff = abs(A[0] - x) for i in 1..len(A)-1:
-if abs(A[i] - x) < bestDiff: bestDiff = abs(A[i] - x) best = A[i]
-return best
+```python
+ClosestSorted_Brute(A, x): 
+    best = A[0]
+    bestDiff = abs(A[0] - x) 
+    for i in 1..len(A)-1:
+        if abs(A[i] - x) < bestDiff: 
+            bestDiff = abs(A[i] - x) 
+            best = A[i]
+    return best
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 ClosestSorted(A, x):
-# binary search insertion point lo = 0; hi = len(A) # [lo, hi) while lo < hi:
-mid = (lo + hi) // 2
-if A[mid] < x: lo = mid + 1 else: hi = mid
+# binary search insertion point 
+    lo = 0; hi = len(A) # [lo, hi) 
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if A[mid] < x: lo = mid + 1 
+        else: hi = mid
+
+    # lo is first index with A[lo] >= x 
+    if lo == 0: return A[0]
+    if lo == len(A): return A[len(A)-1]
+    if abs(A[lo] - x) < abs(A[lo-1] - x): return A[lo] 
+    return A[lo-1]
 ```
 
-```text
-# lo is first index with A[lo] >= x if lo == 0: return A[0]
-if lo == len(A): return A[len(A)-1]
-if abs(A[lo] - x) < abs(A[lo-1] - x): return A[lo] return A[lo-1]
-```
-
-Total time: O(log n)
-
-Extra space: O(1)
+- **Total time**: O(log n)
+- **Extra space**: O(1)
 
 ---
 
@@ -1024,32 +1051,37 @@ Given an array, a local maximum is an element A[i] such that is greater than or 
 
 Solution 1 (Brute Force)
 
-```text
+```python
 LocalMax1D_Brute(A): n = len(A)
-if n == 0: return NONE if n == 1: return 0
-if A[0] >= A[1]: return 0
-if A[n-1] >= A[n-2]: return n-1 for i in 1..n-2:
-if A[i] >= A[i-1] and A[i] >= A[i+1]: return i
-return NONE
+    if n == 0: return NONE 
+    if n == 1: return 0
+    if A[0] >= A[1]: return 0
+    if A[n-1] >= A[n-2]: return n-1 
+    for i in 1..n-2:
+        if A[i] >= A[i-1] and A[i] >= A[i+1]: 
+            return i
+    return NONE
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 LocalMax1D(A):
-lo = 0; hi = len(A) - 1 while lo < hi:
-mid = (lo + hi) // 2 if A[mid] < A[mid+1]:
-lo = mid + 1 else:
-hi = mid return lo
+    lo = 0; hi = len(A) - 1 
+    while lo < hi:
+        mid = (lo + hi) // 2 
+        if A[mid] < A[mid+1]:
+            lo = mid + 1 
+        else:
+            hi = mid 
+    return lo
 ```
 
-Total time: O(log n)
-
-Extra space: O(1)
+- **Total time**: O(log n)
+- **Extra space**: O(1)
 
 ---
 
@@ -1065,44 +1097,47 @@ So the neighbors of A[i][j] are A[i − 1][j], A[i + 1][j], A[i][j − 1], A[i][
 
 Solution 1 (Brute Force)
 
-```text
+```python
 LocalMax2D_Brute(M):
-n = number of rows for i in 0..n-1:
-for j in 0..n-1:
-up	= M[i-1][j] if i>0 else -INF down	= M[i+1][j] if i<n-1 else -INF left	= M[i][j-1] if j>0 else -INF right = M[i][j+1] if j<n-1 else -INF
-if M[i][j] >= up and M[i][j] >= down and M[i][j] >= left and M[i][j] >= right: return (i, j)
+    n = number of rows 
+    for i in 0..n-1:
+        for j in 0..n-1:
+            up	  = M[i-1][j] if i>0 else -INF 
+            down  = M[i+1][j] if i<n-1 else -INF 
+            left  = M[i][j-1] if j>0 else -INF
+            right = M[i][j+1] if j<n-1 else -INF
+            if M[i][j] >= up and M[i][j] >= down and M[i][j] >= left and M[i][j] >= right: 
+                return (i, j)
 ```
 
-Total time: O(n^2)
-
-Extra space: O(1)
+- **Total time**: O(n^2)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 LocalMax2D(M):
-# column-based peak finding return LocalMax2D_Rec(M, 0, n-1)
+    # column-based peak finding 
+    return LocalMax2D_Rec(M, 0, n-1)
+
+LocalMax2D_Rec(M, cL, cR): 
+    midC = (cL + cR) // 2
+    # find row r of maximum in column 
+    midC r = argmax over rows i of M[i][midC]
+
+    leftVal	= M[r][midC-1] if midC>cL else -INF 
+    rightVal = M[r][midC+1] if midC<cR else -INF
+
+    if M[r][midC] >= leftVal and M[r][midC] >= rightVal: # also >= up/down because it is column max at r return (r, midC)
+
+    if leftVal > M[r][midC]:
+        return LocalMax2D_Rec(M, cL, midC-1)
+    else:
+        return LocalMax2D_Rec(M, midC+1, cR)
 ```
 
-```text
-LocalMax2D_Rec(M, cL, cR): midC = (cL + cR) // 2
-# find row r of maximum in column midC r = argmax over rows i of M[i][midC]
-```
-
-```text
-leftVal	= M[r][midC-1] if midC>cL else -INF rightVal = M[r][midC+1] if midC<cR else -INF
-```
-
-```text
-if M[r][midC] >= leftVal and M[r][midC] >= rightVal: # also >= up/down because it is column max at r return (r, midC)
-if leftVal > M[r][midC]:
-return LocalMax2D_Rec(M, cL, midC-1) else:
-return LocalMax2D_Rec(M, midC+1, cR)
-```
-
-Total time: O(n log n)
-
-Extra space: O(log n) recursion
+- **Total time**: O(n log n)
+- **Extra space**: O(log n) recursion
 
 ---
 
@@ -1116,31 +1151,37 @@ Find if a singly linked list has a loop. Use O(1) extra memory.
 
 Solution 1 (Brute Force)
 
-```text
+```python
 HasCycle_Brute(head):
-# if you are allowed extra memory: seen = empty set
-cur = head
-while cur != NULL:
-if cur in seen: return true add cur to seen
-cur = cur.next return false
+    # if you are allowed extra memory: 
+    seen = empty set
+    cur = head
+    while cur != NULL:
+        if cur in seen: return true 
+        add cur to seen
+        cur = cur.next 
+    return false
 ```
 
-Total time: O(n)
-
-Extra space: O(n)
+- **Total time**: O(n)
+- **Extra space**: O(n)
 
 Solution 2 (Improved)
 
-```text
-HasCycle(head): slow = head fast = head
-while fast != NULL and fast.next != NULL: slow = slow.next
-fast = fast.next.next if slow == fast:
-return true return false
+```python
+HasCycle(head): 
+    slow = head 
+    fast = head
+    while fast != NULL and fast.next != NULL: 
+        slow = slow.next
+        fast = fast.next.next 
+        if slow == fast:
+            return true 
+    return false
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 ---
 
@@ -1154,41 +1195,49 @@ Going beyond the problem above, find the first node on the loop (assume there is
 
 Solution 1 (Brute Force)
 
-```text
+```python
 FirstCycleNode_Brute(head):
-seen = empty map node->index cur = head
-idx = 0
-while cur != NULL: if cur in seen:
-return cur seen[cur] = idx idx += 1
-cur = cur.next return NULL
+    seen = empty map node->index 
+    cur = head
+    idx = 0
+    while cur != NULL: 
+        if cur in seen:
+            return cur 
+        seen[cur] = idx 
+        idx += 1
+        cur = cur.next 
+    return NULL
 ```
 
-Total time: O(n)
-
-Extra space: O(n)
+- **Total time**: O(n)
+- **Extra space**: O(n)
 
 Solution 2 (Improved)
 
-```text
+```python
 FirstCycleNode(head):
-# phase 1: detect meeting point slow = head
-fast = head
-while fast != NULL and fast.next != NULL: slow = slow.next
-fast = fast.next.next if slow == fast:
-break
-if fast == NULL or fast.next == NULL: return NULL
+    # phase 1: detect meeting point 
+    slow = head
+    fast = head
+    while fast != NULL and fast.next != NULL: 
+        slow = slow.next
+        fast = fast.next.next 
+        if slow == fast:
+            break
+        if fast == NULL or fast.next == NULL: 
+            return NULL
+
+    # phase 2: find entry 
+    p1 = head
+    p2 = slow
+    while p1 != p2: 
+        p1 = p1.next 
+        p2 = p2.next
+    return p1
 ```
 
-```text
-# phase 2: find entry p1 = head
-p2 = slow
-while p1 != p2: p1 = p1.next p2 = p2.next
-return p1
-```
-
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 ---
 
@@ -1202,30 +1251,32 @@ Consider the "stock market" problem. There is an input array A of prices, of (sa
 
 Solution 1 (Brute Force)
 
-```text
-MaxProfit_Brute(A): best = 0
-for i in 0..len(A)-1:
-for j in i+1..len(A)-1:
-best = max(best, A[j] - A[i]) return best
+```python
+MaxProfit_Brute(A): 
+    best = 0
+    for i in 0..len(A)-1:
+        for j in i+1..len(A)-1:
+            best = max(best, A[j] - A[i]) 
+    return best
 ```
 
-Total time: O(n^2)
-
-Extra space: O(1)
+- **Total time**: O(n^2)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 MaxProfit(A):
-minSoFar = +INF best = 0
-for x in A:
-best = max(best, x - minSoFar) minSoFar = min(minSoFar, x)
-return best
+    minSoFar = +INF 
+    best = 0
+    for x in A:
+        best = max(best, x - minSoFar) 
+        minSoFar = min(minSoFar, x)
+    return best
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 ---
 
@@ -1239,38 +1290,46 @@ The stock market problem again. Except, you need to determine the best selling d
 
 Solution 1 (Brute Force)
 
-```text
-BestSellDay_Brute(A): n = len(A)
-ans = array size n filled -1 for i in 0..n-1:
-bestProfit = 0
-bestJ = -1
-for j in i+1..n-1:
-if A[j] - A[i] > bestProfit: bestProfit = A[j] - A[i] bestJ = j
-ans[i] = bestJ return ans
+```python
+BestSellDay_Brute(A): 
+    n = len(A)
+    ans = array size n filled -1 
+    for i in 0..n-1:
+        bestProfit = 0
+        bestJ = -1
+        for j in i+1..n-1:
+            if A[j] - A[i] > bestProfit: 
+                bestProfit = A[j] - A[i] 
+                bestJ = j
+        ans[i] = bestJ
+    return ans
 ```
 
-Total time: O(n^2)
-
-Extra space: O(n) output
+- **Total time**: O(n^2)
+- **Extra space**: O(n) output
 
 Solution 2 (Improved)
 
-```text
-BestSellDay(A): n = len(A)
-ans = array size n filled -1 maxPrice = A[n-1]
-maxIdx = n-1 ans[n-1] = -1
+```python
+BestSellDay(A): 
+    n = len(A)
+    ans = array size n filled -1 
+    maxPrice = A[n-1]
+    maxIdx = n-1 
+    ans[n-1] = -1
+
+    for i in n-2 down to 0: 
+        if maxPrice > A[i]: 
+            ans[i] = maxIdx
+        else:
+            ans[i] = -1 
+            maxPrice = A[i] 
+            maxIdx = i
+    return ans
 ```
 
-```text
-for i in n-2 down to 0: if maxPrice > A[i]: ans[i] = maxIdx
-else:
-ans[i] = -1 maxPrice = A[i] maxIdx = i
-return ans
-```
-
-Total time: O(n)
-
-Extra space: O(n) output
+- **Total time**: O(n)
+- **Extra space**: O(n) output
 
 ---
 
@@ -1284,32 +1343,40 @@ Every array A induces a permutation π where π(i) is the final location of the 
 
 Solution 1 (Brute Force)
 
-```text
-Permutation_Brute(A): B = copy of A sort(B)
-pi = array size len(A) for i in 0..len(A)-1:
-# find A[i] in B by linear search for j in 0..len(B)-1:
-if B[j] == A[i]: pi[i] = j break
-return pi
+```python
+Permutation_Brute(A): 
+    B = copy of A 
+    sort(B)
+    pi = array size len(A) 
+    for i in 0..len(A)-1:
+        # find A[i] in B by linear search 
+        for j in 0..len(B)-1:
+            if B[j] == A[i]: 
+                pi[i] = j 
+                break
+    return pi
 ```
 
-Total time: O(n^2) + O(n log n)
-
-Extra space: O(n) (copy)
+- **Total time**: O(n^2) + O(n log n)
+- **Extra space**: O(n) (copy)
 
 Solution 2 (Improved)
 
-```text
+```python
 Permutation(A):
-pairs = empty list for i in 0..len(A)-1:
-append(pairs, (A[i], i))	# (value, originalIndex) sort(pairs)	# by value
-pi = array size len(A)
-for pos in 0..len(pairs)-1: (_, orig) = pairs[pos] pi[orig] = pos
-return pi
+    pairs = empty list 
+    for i in 0..len(A)-1:
+        append(pairs, (A[i], i))	# (value, originalIndex) 
+    sort(pairs)	# by value
+    pi = array size len(A)
+    for pos in 0..len(pairs)-1: 
+        (_, orig) = pairs[pos] 
+        pi[orig] = pos
+    return pi
 ```
 
-Total time: O(n log n)
-
-Extra space: O(n)
+- **Total time**: O(n log n)
+- **Extra space**: O(n)
 
 ---
 
@@ -1323,26 +1390,27 @@ Consider a version of MergeSort that does a 1/3-2/3 re split, instead of in halv
 
 Solution 1 (Brute Force)
 
-```text
+```python
 RunningTimeArgument_Brute():
-# Use recursion tree idea: each level does O(n) merging work. # Depth is O(log n) because subproblems shrink geometrically. return "O(n log n)"
+    # Use recursion tree idea: each level does O(n) merging work. 
+    # Depth is O(log n) because subproblems shrink geometrically. 
+    return "O(n log n)"
 ```
 
-Total time: O(1) to state
-
-Extra space: O(1)
+- **Total time**: O(1) to state
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 RunningTimeArgument_MoreFormal():
-# Recurrence: T(n) = T(n/3) + T(2n/3) + O(n)
-# Total work per level is O(n); depth is O(log n). return "T(n) = O(n log n)"
+    # Recurrence: T(n) = T(n/3) + T(2n/3) + O(n)
+    # Total work per level is O(n); depth is O(log n). 
+    return "T(n) = O(n log n)"
 ```
 
-Total time: O(1) to state
-
-Extra space: O(1)
+- **Total time**: O(1) to state
+- **Extra space**: O(1)
 
 ---
 
@@ -1358,29 +1426,34 @@ https://www.youtube.com/watch?v=wYTIWnq29_s
 
 Solution 1 (Brute Force)
 
-```text
-HasFixedPoint_Brute(A): for i in 0..len(A)-1:
-if A[i] == i: return true return false
+```python
+HasFixedPoint_Brute(A): 
+    for i in 0..len(A)-1:
+        if A[i] == i: 
+            return true 
+    return false
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 HasFixedPoint(A):
-lo = 0; hi = len(A)-1 while lo <= hi:
-mid = (lo + hi) // 2
-if A[mid] == mid: return true if A[mid] < mid:
-lo = mid + 1 else:
-hi = mid - 1 return false
+    lo = 0; hi = len(A)-1 
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if A[mid] == mid: return true 
+        if A[mid] < mid:
+            lo = mid + 1 
+        else:
+            hi = mid - 1 
+    return false
 ```
 
-Total time: O(log n)
-
-Extra space: O(1)
+- **Total time**: O(log n)
+- **Extra space**: O(1)
 
 ---
 
@@ -1394,35 +1467,39 @@ There is an extremely large array A such that the first n entries are positive i
 
 Solution 1 (Brute Force)
 
-```text
-FindN_Brute(A): i = 0
-while A[i] != 0: i += 1
-return i
+```python
+FindN_Brute(A): 
+    i = 0
+    while A[i] != 0:
+        i += 1
+    return i
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 FindN(A):
-# exponential search to find upper bound hi = 1
-while A[hi] != 0: hi *= 2
-lo = hi // 2
+    # exponential search to find upper bound 
+    hi = 1
+    while A[hi] != 0: 
+        hi *= 2
+    lo = hi // 2
+
+    # binary search first zero 
+    while lo < hi:
+        mid = (lo + hi) // 2 
+        if A[mid] != 0:
+            lo = mid + 1 
+        else:
+            hi = mid 
+    return lo
 ```
 
-```text
-# binary search first zero while lo < hi:
-mid = (lo + hi) // 2 if A[mid] != 0:
-lo = mid + 1 else:
-hi = mid return lo
-```
-
-Total time: O(log n)
-
-Extra space: O(1)
+- **Total time**: O(log n)
+- **Extra space**: O(1)
 
 ---
 
@@ -1436,33 +1513,36 @@ Matrix has increasing rows and columns. Determine if x is in the matrix.
 
 Solution 1 (Brute Force)
 
-```text
-MatrixSearch_Brute(M, x): n = number of rows for i in 0..n-1:
-for j in 0..n-1:
-if M[i][j] == x: return true return false
+```python
+MatrixSearch_Brute(M, x): 
+    n = number of rows 
+    for i in 0..n-1:
+        for j in 0..n-1:
+            if M[i][j] == x: return true 
+    return false
 ```
 
-Total time: O(n^2)
-
-Extra space: O(1)
+- **Total time**: O(n^2)
+- **Extra space**: O(1)
 
 Solution 2 (Improved)
 
-```text
+```python
 MatrixSearch(M, x):
-n = number of rows
-i = 0
-j = n - 1	# start top-right while i < n and j >= 0:
-if M[i][j] == x: return true if M[i][j] > x:
-j -= 1
-else:
-i += 1
-return false
+    n = number of rows
+    i = 0
+    j = n - 1	# start top-right 
+    while i < n and j >= 0:
+        if M[i][j] == x: return true 
+        if M[i][j] > x:
+            j -= 1
+        else:
+            i += 1
+    return false
 ```
 
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 ---
 
@@ -1478,49 +1558,46 @@ Describe a stack based data structure that supports push, pop, and find- min in 
 
 Solution 1 (Brute Force)
 
-```text
+```python
 MinStack_Brute():
-S = empty stack push(x): S.push(x)
-pop(): return S.pop() findMin():
-# scan entire stack (conceptually) m = +INF
-for each item in S: m = min(m, item)
-return m
+    S = empty stack 
+    push(x): S.push(x)
+    pop(): return S.pop() 
+    findMin():
+        # scan entire stack (conceptually) 
+        m = +INF
+        for each item in S: 
+            m = min(m, item)
+    return m
 ```
 
-Total time: push/pop O(1), findMin O(n)
-
-Extra space: O(1) extra
+- **Total time**: push/pop O(1), findMin O(n)
+- **Extra space**: O(1) extra
 
 Solution 2 (Improved)
 
-```text
+```python
 MinStack():
-S = empty stack
-M = empty stack	# mins
+    S = empty stack
+    M = empty stack	# mins
+
+    push(x):
+        S.push(x)
+        if M.empty or x <= M.top: 
+            M.push(x)
+
+    pop():
+        x = S.pop()
+        if x == M.top:
+            M.pop()
+        return x
+
+    findMin():
+        return M.top
 ```
 
-```text
-push(x):
-S.push(x)
-if M.empty or x <= M.top: M.push(x)
-```
-
-```text
-pop():
-x = S.pop()
-if x == M.top:
-M.pop()
-return x
-```
-
-```text
-findMin():
-return M.top
-```
-
-Total time: All ops O(1)
-
-Extra space: O(n) (second stack)
+- **Total time**: All ops O(1)
+- **Extra space**: O(n) (second stack)
 
 ---
 
@@ -1534,38 +1611,38 @@ Given the pre-order traversal of a binary search tree, reconstruct the tree.
 
 Solution 1 (Brute Force)
 
-```text
-BuildBST_InsertAll(pre): root = NULL
-for x in pre:
-root = BST_Insert(root, x) return root
+```python
+BuildBST_InsertAll(pre): 
+    root = NULL
+    for x in pre:
+        root = BST_Insert(root, x) 
+    return root
 ```
 
-Total time: O(nH) (worst O(n^2))
-
-Extra space: O(1) extra (ignoring recursion)
+- **Total time**: O(nH) (worst O(n^2))
+- **Extra space**: O(1) extra (ignoring recursion)
 
 Solution 2 (Improved)
 
-```text
-BuildBST_FromPreorder(pre): idx = 0
-return Build(pre, -INF, +INF, idx)
+```python
+BuildBST_FromPreorder(pre): 
+    idx = 0
+    return Build(pre, -INF, +INF, idx)
+
+Build(pre, low, high, idx by reference): 
+    if idx == len(pre): return NULL
+    x = pre[idx]
+    if x < low or x > high: return NULL
+
+    idx += 1
+    node = new Node(x)
+    node.left	= Build(pre, low, x, idx) 
+    node.right = Build(pre, x, high, idx) 
+    return node
 ```
 
-```text
-Build(pre, low, high, idx by reference): if idx == len(pre): return NULL
-x = pre[idx]
-if x < low or x > high: return NULL
-```
-
-```text
-idx += 1
-node = new Node(x)
-node.left	= Build(pre, low, x, idx) node.right = Build(pre, x, high, idx) return node
-```
-
-Total time: O(n)
-
-Extra space: O(H) recursion
+- **Total time**: O(n)
+- **Extra space**: O(H) recursion
 
 ---
 
@@ -1579,49 +1656,42 @@ Design a queue using only stacks. It must support the enqueue and de-queue opera
 
 Solution 1 (Brute Force)
 
-```text
+```python
 QueueWithStacks_Slow():
-S = empty stack
+    S = empty stack
+
+    enqueue(x):
+        T = empty stack
+        while S not empty: T.push(S.pop()) 
+        S.push(x)
+        while T not empty: S.push(T.pop())
+
+    dequeue():
+        return S.pop()
 ```
 
-```text
-enqueue(x):
-T = empty stack
-while S not empty: T.push(S.pop()) S.push(x)
-while T not empty: S.push(T.pop())
-```
-
-```text
-dequeue():
-return S.pop()
-```
-
-Total time: enqueue O(n), dequeue O(1), total up to O(k^2)
-
-Extra space: O(k) (temporary stack)
+- **Total time**: enqueue O(n), dequeue O(1), total up to O(k^2)
+- **Extra space**: O(k) (temporary stack)
 
 Solution 2 (Improved)
 
-```text
+```python
 QueueWithStacks():
-IN	= empty stack OUT = empty stack
+    IN	= empty stack 
+    OUT = empty stack
+
+    enqueue(x):
+        IN.push(x)
+
+    dequeue():
+        if OUT.empty:
+            while IN not empty: 
+                OUT.push(IN.pop())
+        return OUT.pop()
 ```
 
-```text
-enqueue(x):
-IN.push(x)
-```
-
-```text
-dequeue():
-if OUT.empty:
-while IN not empty: OUT.push(IN.pop())
-return OUT.pop()
-```
-
-Total time: Amortized O(1) per op; total O(k)
-
-Extra space: O(k)
+- **Total time**: Amortized O(1) per op; total O(k)
+- **Extra space**: O(k)
 
 ---
 
@@ -1635,48 +1705,46 @@ Given login/logout time of all users for a particular website in the form: (user
 
 Solution 1 (Brute Force)
 
-```text
+```python
 LoginLogout_Brute(records):
-logins = list of all login times logouts = list of all logout times
+    logins = list of all login times 
+    logouts = list of all logout times
+
+    query(a, b):
+        c1 = 0; c2 = 0
+        for t in logins:
+            if a <= t <= b: c1 += 1 
+        for t in logouts:
+            if a <= t <= b: c2 += 1 
+        return (c1, c2)
 ```
 
-```text
-query(a, b):
-c1 = 0; c2 = 0
-for t in logins:
-if a <= t <= b: c1 += 1 for t in logouts:
-if a <= t <= b: c2 += 1 return (c1, c2)
-```
-
-Total time: query O(N)
-
-Extra space: O(N)
+- **Total time**: query O(N)
+- **Extra space**: O(N)
 
 Solution 2 (Improved)
 
-```text
+```python
 LoginLogout():
-logins = sorted list of login times logouts = sorted list of logout times
+    logins = sorted list of login times 
+    logouts = sorted list of logout times
+
+    build(records):
+        fill logins and logouts 
+        sort(logins); sort(logouts)
+
+    countInRange(sortedTimes, a, b):
+        # returns number of t with a <= t <= b 
+        left = lower_bound(sortedTimes, a) 
+        right = upper_bound(sortedTimes, b) 
+        return right - left
+
+    query(a, b):
+        return (countInRange(logins,a,b), countInRange(logouts,a,b))
 ```
 
-```text
-build(records):
-fill logins and logouts sort(logins); sort(logouts)
-```
-
-```text
-countInRange(sortedTimes, a, b):
-# returns number of t with a <= t <= b left = lower_bound(sortedTimes, a) right = upper_bound(sortedTimes, b) return right - left
-```
-
-```text
-query(a, b):
-return (countInRange(logins,a,b), countInRange(logouts,a,b))
-```
-
-Total time: build O(N log N); query O(log N)
-
-Extra space: O(N)
+- **Total time**: build O(N log N); query O(log N)
+- **Extra space**: O(N)
 
 ---
 
@@ -1690,58 +1758,52 @@ I am designing a media player that should store songs and play them in random or
 
 Solution 1 (Brute Force)
 
-```text
+```python
 RandomSongs_Brute():
-S = list of songs
+    S = list of songs
+
+    insert(song):
+        append(S, song)
+
+    delete(song):
+        find song in S by linear scan and remove (shift)
+
+    playRandom():
+        i = randomInt(0, len(S)-1) 
+        play(S[i])
 ```
 
-```text
-insert(song):
-append(S, song)
-```
-
-```text
-delete(song):
-find song in S by linear scan and remove (shift)
-```
-
-```text
-playRandom():
-i = randomInt(0, len(S)-1) play(S[i])
-```
-
-Total time: insert O(1), delete O(n), random O(1)
-
-Extra space: O(n)
+- **Total time**: insert O(1), delete O(n), random O(1)
+- **Extra space**: O(n)
 
 Solution 2 (Improved)
 
-```text
+```python
 RandomSongs():
-A = dynamic array of songs
-H = hash map song -> index in A
+    A = dynamic array of songs
+    H = hash map song -> index in A
+
+    insert(song):
+        if song in H: return 
+        H[song] = len(A) 
+        append(A, song)
+
+    delete(song):
+        if song not in H: return 
+        i = H[song]
+        last = A[len(A)-1] 
+        A[i] = last 
+        H[last] = i
+        remove last element from A 
+        delete H[song]
+
+    playRandom():
+        i = randomInt(0, len(A)-1) 
+        play(A[i])
 ```
 
-```text
-insert(song):
-if song in H: return H[song] = len(A) append(A, song)
-```
-
-```text
-delete(song):
-if song not in H: return i = H[song]
-last = A[len(A)-1] A[i] = last H[last] = i
-remove last element from A delete H[song]
-```
-
-```text
-playRandom():
-i = randomInt(0, len(A)-1) play(A[i])
-```
-
-Total time: All ops average O(1)
-
-Extra space: O(n)
+- **Total time**: All ops average O(1)
+- **Extra space**: O(n)
 
 ---
 
@@ -1755,47 +1817,48 @@ Given two pointers to nodes x and y in a binary search tree, find the unique pat
 
 Solution 1 (Brute Force)
 
-```text
+```python
 PathBST_Brute(root, x, y):
-# find root-to-x path by DFS, and root-to-y path by DFS px = RootToNodePath(root, x)
-py = RootToNodePath(root, y)
-# remove common prefix to find LCA, then combine return Combine(px, py)
+    # find root-to-x path by DFS, and root-to-y path by DFS 
+    px = RootToNodePath(root, x)
+    py = RootToNodePath(root, y)
+    # remove common prefix to find LCA, then combine 
+    return Combine(px, py)
 ```
 
-Total time: O(n)
-
-Extra space: O(H) recursion + path storage
+- **Total time**: O(n)
+- **Extra space**: O(H) recursion + path storage
 
 Solution 2 (Improved)
 
-```text
+```python
 PathBST(root, x, y):
-lca = LCA_BST(root, x.key, y.key)
-p1 = PathFrom(lca, x.key)	# follow BST decisions p2 = PathFrom(lca, y.key)
+    lca = LCA_BST(root, x.key, y.key)
+    p1 = PathFrom(lca, x.key)	# follow BST decisions 
+    p2 = PathFrom(lca, y.key)
+
+    # unique path x->y is reverse(p1) + p2[1..]
+    return reverse(p1) concatenated with p2 without first node
+
+LCA_BST(node, a, b): 
+    while node != NULL:
+        if a < node.key and b < node.key: node = node.left
+        else if a > node.key and b > node.key: node = node.right 
+        else: return node
+
+PathFrom(node, target): 
+    path = empty list 
+    cur = node
+    while cur != NULL: 
+        append(path, cur)
+        if target == cur.key: break
+        if target < cur.key: cur = cur.left 
+        else: cur = cur.right
+    return path
 ```
 
-```text
-# unique path x->y is reverse(p1) + p2[1..]
-return reverse(p1) concatenated with p2 without first node
-```
-
-```text
-LCA_BST(node, a, b): while node != NULL:
-if a < node.key and b < node.key: node = node.left
-else if a > node.key and b > node.key: node = node.right else: return node
-```
-
-```text
-PathFrom(node, target): path = empty list cur = node
-while cur != NULL: append(path, cur)
-if target == cur.key: break
-if target < cur.key: cur = cur.left else: cur = cur.right
-return path
-```
-
-Total time: O(H)
-
-Extra space: O(H) (path output)
+- **Total time**: O(H)
+- **Extra space**: O(H) (path output)
 
 ---
 
@@ -1815,53 +1878,51 @@ and
 
 Solution 1 (Brute Force)
 
-```text
-Top10Words_Brute(): words = list
+```python
+Top10Words_Brute(): 
+    words = list
+
+    insert(w):
+        append(words, w)
+
+    top10():
+        # compute frequencies by nested scans 
+        freqPairs = empty list
+        for each w in words: 
+            count = 0
+            for each u in words:
+                if u == w: count += 1
+            update freqPairs for w with count 
+        sort freqPairs by count descending 
+        return first 10 words
 ```
 
-```text
-insert(w):
-append(words, w)
-```
-
-```text
-top10():
-# compute frequencies by nested scans freqPairs = empty list
-for each w in words: count = 0
-for each u in words:
-if u == w: count += 1
-update freqPairs for w with count sort freqPairs by count descending return first 10 words
-```
-
-Total time: insert O(1), top10 O(n^2 + n log n)
-
-Extra space: O(n)
+- **Total time**: insert O(1), top10 O(n^2 + n log n)
+- **Extra space**: O(n)
 
 Solution 2 (Improved)
 
-```text
+```python
 Top10Words():
-count = hash map word -> frequency
-heap = min-heap of at most 10 items (freq, word)
-```
+    count = hash map word -> frequency
+    heap = min-heap of at most 10 items (freq, word)
 
-```text
 insert(w):
-count[w] += 1
-```
+    count[w] += 1
 
-```text
 top10():
-heap.clear()
-for each (w, f) in count: if heap.size < 10:
-heap.push((f, w))
-else if f > heap.top.freq: heap.popMin() heap.push((f, w))
-return heap items sorted descending by freq
+    heap.clear()
+    for each (w, f) in count: 
+        if heap.size < 10:
+            heap.push((f, w))
+        else if f > heap.top.freq: 
+            heap.popMin() 
+            heap.push((f, w))
+    return heap items sorted descending by freq
 ```
 
-Total time: insert avg O(1), top10 O(U log 10) where U=#unique
-
-Extra space: O(U) + O(10)
+- **Total time**: insert avg O(1), top10 O(U log 10) where U=#unique
+- **Extra space**: O(U) + O(10)
 
 ---
 
@@ -1875,48 +1936,54 @@ You have a stream of integers. Maintain the value of the median. What about the 
 
 Solution 1 (Brute Force)
 
-```text
-StreamOrderStats_Brute(): A = empty list insert(x):
-append(A, x) sort(A)
-median():
-n = len(A)
-if n%2==1: return A[n//2]
-return (A[n//2-1] + A[n//2]) / 2 kth(k):
-return A[k-1]
+```python
+StreamOrderStats_Brute(): 
+    A = empty list 
+    
+    insert(x):
+        append(A, x) 
+        sort(A)
+    
+    median():
+        n = len(A)
+        if n%2==1: return A[n//2]
+        return (A[n//2-1] + A[n//2]) / 2 
+    
+    kth(k):
+        return A[k-1]
 ```
 
-Total time: insert O(n log n), queries O(1) 
-Extra space: O(n)
+- **Total time**: insert O(n log n), queries O(1) 
+- **Extra space**: O(n)
 
 Solution 2 (Improved)
 
-```text
+```python
 MedianTwoHeaps():
-maxHeap = empty max-heap minHeap = empty min-heap
+    maxHeap = empty max-heap 
+    minHeap = empty min-heap
+
+    insert(x):
+        if maxHeap empty or x <= maxHeap.top: maxHeap.push(x) 
+        else: minHeap.push(x)
+        if maxHeap.size > minHeap.size + 1: 
+            minHeap.push(maxHeap.popTop())
+        if minHeap.size > maxHeap.size: 
+            maxHeap.push(minHeap.popTop())
+
+    median():
+        if maxHeap.size == minHeap.size:
+            return (maxHeap.top + minHeap.top) / 2 
+        return maxHeap.top
+
+    KthSmallest_Note():
+        # If your course covered augmented BSTs (order statistic tree),
+        # store subtree sizes to support insert and select(k) in O(log n).
+        # Otherwise, a practical approach is to keep a balanced BST/multiset and walk k steps.
 ```
 
-```text
-insert(x):
-if maxHeap empty or x <= maxHeap.top: maxHeap.push(x) else: minHeap.push(x)
-if maxHeap.size > minHeap.size + 1: minHeap.push(maxHeap.popTop())
-if minHeap.size > maxHeap.size: maxHeap.push(minHeap.popTop())
-```
-
-```text
-median():
-if maxHeap.size == minHeap.size:
-return (maxHeap.top + minHeap.top) / 2 return maxHeap.top
-```
-
-```text
-KthSmallest_Note():
-# If your course covered augmented BSTs (order statistic tree),
-# store subtree sizes to support insert and select(k) in O(log n).
-# Otherwise, a practical approach is to keep a balanced BST/multiset and walk k steps.
-```
-
-Total time: median insert O(log n), median O(1); kth with OST: O(log n) 
-Extra space: O(n)
+- **Total time**: median insert O(log n), median O(1); kth with OST: O(log n) 
+- **Extra space**: O(n)
 
 ---
 
@@ -1928,30 +1995,30 @@ A pair of nodes x,y in a (supposed) binary search tree violate the BST property 
 
 Solution 1 (Brute Force)
 
-```text
+```python
 CountViolations_Brute(root):
-nodes = list of all nodes (e.g., preorder) violations = 0
-for each node x in nodes:
-for each descendant y of x:
-if (y is in left subtree of x and y.key > x.key) or (y is in right subtree of x and y.key < x.key):
-violations += 1 return violations
+    nodes = list of all nodes (e.g., preorder) 
+    violations = 0
+    for each node x in nodes:
+        for each descendant y of x:
+            if (y is in left subtree of x and y.key > x.key) or (y is in right subtree of x and y.key < x.key):
+                violations += 1
+    return violations
 ```
 
-Total time: O(n^2)
-
-Extra space: O(n) (node list)
+- **Total time**: O(n^2)
+- **Extra space**: O(n) (node list)
 
 Solution 2 (Improved)
 
-```text
+```python
 CountViolations_Improved(root):
-# A common improvement uses recursion carrying valid (min,max) bounds and # additional counting structure; exact optimal depends on course coverage. # Safe approach for this test: present the brute-force clearly.
-return CountViolations_Brute(root)
+    # A common improvement uses recursion carrying valid (min,max) bounds and # additional counting structure; exact optimal depends on course coverage. # Safe approach for this test: present the brute-force clearly.
+    return CountViolations_Brute(root)
 ```
 
-Total time: O(n^2)
-
-Extra space: O(n)
+- **Total time**: O(n^2)
+- **Extra space**: O(n)
 
 ---
 
@@ -1965,40 +2032,45 @@ Given a string of parentheses/brackets, check if it is valid (meaning that every
 
 Solution 1 (Brute Force)
 
-```text
+```python
 IsValid_Brute(s):
-# repeatedly delete adjacent matching pairs until no change changed = true
-while changed: changed = false i = 0
-while i < len(s)-1:
-if s[i..i+1] is one of '()','[]','{}': delete s[i..i+1]
-changed = true break
-i += 1
-return len(s) == 0
+    # repeatedly delete adjacent matching pairs until no change 
+    changed = true
+    while changed: 
+        changed = false 
+        i = 0
+        while i < len(s)-1:
+            if s[i..i+1] is one of '()','[]','{}': 
+                delete s[i..i+1]
+                changed = true 
+                break
+            i += 1
+    return len(s) == 0
 ```
 
-Total time: O(n^2) worst
-
-Extra space: O(1) extra (in-place string edits)
+- **Total time**: O(n^2) worst
+- **Extra space**: O(1) extra (in-place string edits)
 
 Solution 2 (Improved)
 
-```text
+```python
 IsValid(s):
-st = empty stack for ch in s:
-if ch is opening bracket: st.push(ch)
-else:
-if st.empty: return false top = st.pop()
-if not matches(top, ch): return false return st.empty
-```
+    st = empty stack 
+    for ch in s:
+        if ch is opening bracket: 
+            st.push(ch)
+        else:
+            if st.empty: return false 
+            top = st.pop()
+            if not matches(top, ch): return false 
+    return st.empty
 
-```text
 matches(open, close):
-return (open=='(' and close==')') or (open=='[' and close==']') or (open=='{' and close=='}'
+    return (open=='(' and close==')') or (open=='[' and close==']') or (open=='{' and close=='}'
 ```
 
-Total time: O(n)
-
-Extra space: O(n)
+- **Total time**: O(n)
+- **Extra space**: O(n)
 
 ---
 
@@ -2012,41 +2084,37 @@ An array is k-sorted, if all elements are misplaced by at most k positions (with
 
 Solution 1 (Brute Force)
 
-```text
-SortKSorted_Brute(A): sort(A)
-return A
+```python
+SortKSorted_Brute(A): 
+    sort(A)
+    return A
 ```
 
-Total time: O(n log n)
-
-Extra space: O(1) extra (depends on sort)
+- **Total time**: O(n log n)
+- **Extra space**: O(1) extra (depends on sort)
 
 Solution 2 (Improved)
 
-```text
+```python
 SortKSorted(A, k):
-heap = empty min-heap out = empty list
+    heap = empty min-heap 
+    out = empty list
+
+    for i in 0..min(k, len(A)-1): 
+        heap.push(A[i])
+
+    for i in k+1..len(A)-1: 
+        append(out, heap.popMin()) 
+        heap.push(A[i])
+
+    while heap not empty: 
+        append(out, heap.popMin())
+
+    copy out back into A (or return out)
 ```
 
-```text
-for i in 0..min(k, len(A)-1): heap.push(A[i])
-```
-
-```text
-for i in k+1..len(A)-1: append(out, heap.popMin()) heap.push(A[i])
-```
-
-```text
-while heap not empty: append(out, heap.popMin())
-```
-
-```text
-copy out back into A (or return out)
-```
-
-Total time: O(n log k)
-
-Extra space: O(k) heap + O(n) output
+- **Total time**: O(n log k)
+- **Extra space**: O(k) heap + O(n) output
 
 ---
 
@@ -2060,36 +2128,40 @@ Convert Min Heap to Max Heap: https://www.geeksforgeeks.org/dsa/convert-min-heap
 
 Solution 1 (Brute Force)
 
-```text
+```python
 MaxToMin_Brute(A):
-# remove all elements then reinsert into a new min-heap B = empty min-heap
-while A not empty:
-x = extractMax(A) B.insert(x)
-return B
+    # remove all elements then reinsert into a new min-heap B = empty min-heap
+    while A not empty:
+        x = extractMax(A) 
+        B.insert(x)
+    return B
 ```
 
-Total time: O(n log n)
-
-Extra space: O(n)
+- **Total time**: O(n log n)
+- **Extra space**: O(n)
 
 Solution 2 (Improved)
 
-```text
+```python
 MaxToMin(A):
-# bottom-up heapify for min-heap for i in (len(A)//2 - 1) down to 0:
-MinHeapify(A, i)
+    # bottom-up heapify for min-heap 
+    for i in (len(A)//2 - 1) down to 0:
+        MinHeapify(A, i)
+
+MinHeapify(A, i): 
+    while true:
+        l = 2*i + 1 
+        r = 2*i + 2 
+        smallest = i
+        if l < len(A) and A[l] < A[smallest]: smallest = l 
+        if r < len(A) and A[r] < A[smallest]: smallest = r 
+        if smallest == i: break
+        swap(A[i], A[smallest]) 
+        i = smallest
 ```
 
-```text
-MinHeapify(A, i): while true:
-l = 2*i + 1 r = 2*i + 2 smallest = i
-if l < len(A) and A[l] < A[smallest]: smallest = l if r < len(A) and A[r] < A[smallest]: smallest = r if smallest == i: break
-swap(A[i], A[smallest]) i = smallest
-```
-
-Total time: O(n)
-
-Extra space: O(1)
+- **Total time**: O(n)
+- **Extra space**: O(1)
 
 ---
 
@@ -2103,56 +2175,57 @@ Consider an input of k sorted arrays of integers, each of size n. A range [a, b]
 
 Solution 1 (Brute Force)
 
-```text
+```python
 SmallestRange_Brute(Arrays):
-# check all pairs (a,b) from all values and test coverage vals = all elements from all arrays
-sort(vals)
-best = (vals[0], vals[-1]) for i in 0..len(vals)-1:
-for j in i..len(vals)-1:
-if CoversAll(Arrays, vals[i], vals[j]):
-if (vals[j]-vals[i]) < (best.b - best.a): best = (vals[i], vals[j])
-return best
+    # check all pairs (a,b) from all values and test coverage vals = all elements from all arrays
+    sort(vals)
+    best = (vals[0], vals[-1]) 
+    for i in 0..len(vals)-1:
+        for j in i..len(vals)-1:
+            if CoversAll(Arrays, vals[i], vals[j]):
+                if (vals[j]-vals[i]) < (best.b - best.a): 
+                    best = (vals[i], vals[j])
+    return best
+
+    CoversAll(Arrays, a, b): 
+        for each arr in Arrays:
+            if no element in arr within [a,b]: return false 
+        return true
 ```
 
-```text
-CoversAll(Arrays, a, b): for each arr in Arrays:
-if no element in arr within [a,b]: return false return true
-```
-
-Total time: Very large (>= O(N^2 * k log n))
-
-Extra space: O(N)
+- **Total time**: Very large (>= O(N^2 * k log n))
+- **Extra space**: O(N)
 
 Solution 2 (Improved)
 
-```text
+```python
 SmallestRange(Arrays):
-heap = min-heap of (value, arrayId, index) curMax = -INF
-for t in 0..k-1:
-v = Arrays[t][0] heap.push((v, t, 0)) curMax = max(curMax, v)
+    heap = min-heap of (value, arrayId, index) 
+    curMax = -INF
+    for t in 0..k-1:
+        v = Arrays[t][0] 
+        heap.push((v, t, 0)) 
+        curMax = max(curMax, v)
+
+    bestA = heap.top.value 
+    bestB = curMax
+
+    while true:
+        (v, t, i) = heap.popMin()
+        if curMax - v < bestB - bestA: 
+            bestA = v; bestB = curMax
+
+        if i + 1 == len(Arrays[t]): 
+            break
+        nxt = Arrays[t][i+1] 
+        heap.push((nxt, t, i+1)) 
+        curMax = max(curMax, nxt)
+
+    return (bestA, bestB)
 ```
 
-```text
-bestA = heap.top.value bestB = curMax
-```
-
-```text
-while true:
-(v, t, i) = heap.popMin()
-if curMax - v < bestB - bestA: bestA = v; bestB = curMax
-```
-
-```text
-if i + 1 == len(Arrays[t]): break
-nxt = Arrays[t][i+1] heap.push((nxt, t, i+1)) curMax = max(curMax, nxt)
-```
-
-```text
-return (bestA, bestB)
-```
-
-Total time: O(N log k) where N total elements 
-Extra space: O(k) heap
+- **Total time**: O(N log k) where N total elements 
+- **Extra space**: O(k) heap
 
 ---
 
@@ -2172,43 +2245,42 @@ and
 
 Solution 1 (Brute Force)
 
-```text
+```python
 UpdateHeights_Brute(root):
-# recompute heights of entire tree after each operation return Recompute(root)
-```
+    # recompute heights of entire tree after each operation 
+    return Recompute(root)
 
-```text
 Recompute(node):
-if node == NULL: return 0 lh = Recompute(node.left) rh = Recompute(node.right)
-node.height = 1 + max(lh, rh) return node.height
+    if node == NULL: return 0 
+    lh = Recompute(node.left) 
+    rh = Recompute(node.right)
+    node.height = 1 + max(lh, rh) 
+    return node.height
 ```
 
-Total time: O(n) per update
-
-Extra space: O(H) recursion
+- **Total time**: O(n) per update
+- **Extra space**: O(H) recursion
 
 Solution 2 (Improved)
 
-```text
+```python
 BST_Insert_WithHeights(root, x):
-root = BST_Insert(root, x)	# standard BST insert returns inserted node path known
-via recu # update heights while unwinding recursion:
-# node.height = 1 + max(height(node.left), height(node.right)) return root
-```
+    root = BST_Insert(root, x)	# standard BST insert returns inserted node path known
+    via recu # update heights while unwinding recursion:
+    # node.height = 1 + max(height(node.left), height(node.right)) 
+    return root
 
-```text
-BST_Delete_WithHeights(root, x): root = BST_Delete(root, x)
-# similarly update heights while unwinding recursion return root
-```
+BST_Delete_WithHeights(root, x): 
+    root = BST_Delete(root, x)
+    # similarly update heights while unwinding recursion 
+    return root
 
-```text
 Height(node):
-return 0 if node==NULL else node.height
+    return 0 if node==NULL else node.height
 ```
 
-Total time: O(H) per insert/delete
-
-Extra space: O(H) recursion
+- **Total time**: O(H) per insert/delete
+- **Extra space**: O(H) recursion
 
 ---
 
@@ -2222,29 +2294,33 @@ Consider a BST. We want an extra operation “less-than delete”: given x, this
 
 Solution 1 (Brute Force)
 
-```text
+```python
 LessThanDelete_Brute(root, x):
-# inorder traversal, delete each key <= x individually keys = InorderKeys(root)
-for k in keys: if k <= x:
-root = BST_Delete(root, k) return root
+    # inorder traversal, delete each key <= x individually 
+    keys = InorderKeys(root)
+    for k in keys: 
+        if k <= x:
+            root = BST_Delete(root, k)
+    return root
 ```
 
-Total time: O(m*H) where m=#deleted
-
-Extra space: O(n) (keys list)
+- **Total time**: O(m*H) where m=#deleted
+- **Extra space**: O(n) (keys list)
 
 Solution 2 (Improved)
 
-```text
+```python
 LessThanDelete(root, x):
-if root == NULL: return NULL if root.key <= x:
-# delete root and entire left subtree; keep processing right subtree return LessThanDelete(root.right, x)
-else:
-root.left = LessThanDelete(root.left, x) return root
+    if root == NULL: return NULL 
+    if root.key <= x:
+        # delete root and entire left subtree; keep processing right subtree 
+        return LessThanDelete(root.right, x)
+    else:
+        root.left = LessThanDelete(root.left, x) 
+        return root
 ```
 
-Total time: O(nodes visited) (often O(H + deleted))
-
-Extra space: O(H) recursion
+- **Total time**: O(nodes visited) (often O(H + deleted))
+- **Extra space**: O(H) recursion
 
 ---

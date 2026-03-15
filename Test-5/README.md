@@ -707,7 +707,7 @@ If you recognize these patterns quickly, you can solve most exam problems.
 
 ---
 
-# Pattern 1 — BFS Traversal
+# Pattern 1 — BFS Traversal (Breadth-First Search)
 
 Used for:
 - Connectivity
@@ -810,7 +810,7 @@ bool hasCycle(const Graph& adj) {
 
 ---
 
-# Pattern 3 — DFS Recursion Stack
+# Pattern 3 — DFS Recursion Stack (Depth-First Search)
 
 Used for detecting **directed cycles / DAG checking**.
 

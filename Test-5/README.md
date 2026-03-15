@@ -57,40 +57,40 @@ bool hasCycleUndirected(const Graph& adj) {
     int n = adj.size();
 
     // visited[i] = have we already discovered vertex i?
-    vector<bool> visited(n,false);
+    vector<bool> visited(n, false);
 
     // parent[i] = the vertex that first discovered i in BFS tree
-    vector<int> parent(n,-1);
+    vector<int> parent(n, -1);
 
     queue<int> q;
 
     // We loop through every vertex because the graph may be disconnected.
-    for(int start=0; start<n; start++){
+    for(int start = 0; start < n; start++) {
 
         // If this component was already explored, skip it.
         if(visited[start]) continue;
 
         // Start BFS from this component.
-        visited[start]=true;
+        visited[start] = true;
         q.push(start);
 
-        while(!q.empty()){
+        while(!q.empty()) {
 
-            int u=q.front();
+            int u = q.front();
             q.pop();
 
             // Explore every neighbor of u.
-            for(int v:adj[u]){
+            for(int v : adj[u]) {
 
                 // First time seeing v: mark visited, remember parent, push into queue.
-                if(!visited[v]){
-                    visited[v]=true;
-                    parent[v]=u;
+                if(!visited[v]) {
+                    visited[v] = true;
+                    parent[v] = u;
                     q.push(v);
                 }
                 // If v was already visited and is NOT the parent of u,
                 // then we found a back connection => cycle.
-                else if(parent[u]!=v){
+                else if(parent[u] != v) {
                     return true;
                 }
             }
@@ -119,30 +119,30 @@ Remove the edge `(u,v)` and check if `u` can still reach `v`.
 ## Code
 
 ```c++
-bool edgeInCycle(const Graph& adj,int a,int b){
+bool edgeInCycle(const Graph& adj, int a, int b) {
 
-    int n=adj.size();
+    int n = adj.size();
     vector<bool> visited(n,false);
     queue<int> q;
 
     // Start BFS from one endpoint of the edge.
-    visited[a]=true;
+    visited[a] = true;
     q.push(a);
 
-    while(!q.empty()){
+    while(!q.empty()) {
 
-        int u=q.front();
+        int u = q.front();
         q.pop();
 
-        for(int v:adj[u]){
+        for(int v : adj[u]) {
 
             // Pretend the edge (a,b) was removed from the graph.
-            if((u==a && v==b) || (u==b && v==a))
+            if((u == a && v == b) || (u == b && v == a))
                 continue;
 
             // Regular BFS traversal.
-            if(!visited[v]){
-                visited[v]=true;
+            if(!visited[v]) {
+                visited[v] = true;
                 q.push(v);
             }
         }
@@ -178,41 +178,41 @@ States:
 ## Code
 
 ```c++
-bool dfsCycle(int u,const Graph& adj,vector<int>& state){
+bool dfsCycle(int u, const Graph& adj, vector<int>& state) {
 
     // state[u] = 1 means u is currently in the recursion stack.
-    state[u]=1;
+    state[u] = 1;
 
-    for(int v:adj[u]){
+    for(int v : adj[u]) {
 
         // If we see a vertex that is already in the recursion stack,
         // then we found a directed cycle.
-        if(state[v]==1)
+        if(state[v] == 1)
             return true;
 
         // If v is unvisited, continue DFS from v.
-        if(state[v]==0 && dfsCycle(v,adj,state))
+        if(state[v] == 0 && dfsCycle(v, adj, state))
             return true;
     }
 
     // state[u] = 2 means all descendants of u are fully processed.
-    state[u]=2;
+    state[u] = 2;
 
     return false;
 }
 
-bool isDAG(const Graph& adj){
+bool isDAG(const Graph& adj) {
 
-    int n=adj.size();
+    int n = adj.size();
 
     // 0 = unvisited, 1 = visiting, 2 = finished
-    vector<int> state(n,0);
+    vector<int> state(n, 0);
 
     // Need to try DFS from every vertex because graph may be disconnected.
-    for(int i=0;i<n;i++){
+    for(int i = 0; i < n; i++) {
 
-        if(state[i]==0){
-            if(dfsCycle(i,adj,state))
+        if(state[i] == 0) {
+            if(dfsCycle(i, adj, state))
                 return false; // cycle found => not a DAG
         }
     }
@@ -242,54 +242,54 @@ If some vertex becomes unreachable, `v` is a cut vertex.
 ## Code
 
 ```c++
-pair<bool,pair<int,int>> isCutVertex(const Graph& adj,int cut){
+pair<bool,pair<int,int>> isCutVertex(const Graph& adj, int cut) {
 
-    int n=adj.size();
-    vector<bool> visited(n,false);
+    int n = adj.size();
+    vector<bool> visited(n, false);
     queue<int> q;
 
-    int start=-1;
+    int start = -1;
 
     // Pick any vertex different from 'cut' as the BFS start.
-    for(int i=0;i<n;i++){
-        if(i!=cut){
-            start=i;
+    for(int i = 0; i < n; i++) {
+        if(i != cut) {
+            start = i;
             break;
         }
     }
 
     // If graph is too small, there may be no valid start.
     if(start == -1)
-        return {false,{-1,-1}};
+        return {false, {-1, -1}};
 
     // Start BFS while pretending 'cut' was removed.
-    visited[start]=true;
+    visited[start] = true;
     q.push(start);
 
-    while(!q.empty()){
+    while(!q.empty()) {
 
-        int u=q.front();
+        int u = q.front();
         q.pop();
 
-        for(int v:adj[u]){
+        for(int v : adj[u]) {
 
             // Skip the removed vertex.
-            if(v==cut) continue;
+            if(v == cut) continue;
 
-            if(!visited[v]){
-                visited[v]=true;
+            if(!visited[v]) {
+                visited[v] = true;
                 q.push(v);
             }
         }
     }
 
     // If some other vertex is unreachable, then 'cut' disconnects the graph.
-    for(int i=0;i<n;i++){
-        if(i!=cut && !visited[i])
-            return {true,{start,i}}; // disconnected pair found
+    for(int i = 0; i < n; i++) {
+        if(i != cut && !visited[i])
+            return {true, {start,i}}; // disconnected pair found
     }
 
-    return {false,{-1,-1}}; // not a cut vertex
+    return {false, {-1,-1}}; // not a cut vertex
 }
 ```
 
@@ -336,17 +336,17 @@ Reverse every edge.
 ## Code
 
 ```c++
-Graph reverseGraph(const Graph& adj){
+Graph reverseGraph(const Graph& adj) {
 
-    int n=adj.size();
+    int n = adj.size();
 
     // rev will store the reversed graph.
     Graph rev(n);
 
     // For every edge u -> v in the original graph,
     // add edge v -> u in the reversed graph.
-    for(int u=0;u<n;u++){
-        for(int v:adj[u]){
+    for(int u = 0; u < n; u++) {
+        for(int v : adj[u]) {
             rev[v].push_back(u);
         }
     }
@@ -374,50 +374,50 @@ Check every pair of vertices and count common neighbors.
 ## Code
 
 ```c++
-pair<int,int> maxCommonNeighbors(const Graph& adj){
+pair<int,int> maxCommonNeighbors(const Graph& adj) {
 
-    int n=adj.size();
+    int n = adj.size();
 
     // best stores the pair with the largest intersection so far.
-    pair<int,int> best={-1,-1};
-    int bestCount=-1;
+    pair<int,int> best = {-1, -1};
+    int bestCount =- 1;
 
     // mark[x] tells whether x is a neighbor of u.
-    vector<bool> mark(n,false);
+    vector<bool> mark(n, false);
 
     // used keeps track of what we marked so we can unmark efficiently.
     vector<int> used;
 
-    for(int u=0;u<n;u++){
+    for(int u = 0; u < n; u++) {
 
-        for(int v=u+1;v<n;v++){
+        for(int v = u + 1; v < n; v++) {
 
             used.clear();
 
             // Mark all neighbors of u.
-            for(int x:adj[u]){
-                if(!mark[x]){
-                    mark[x]=true;
+            for(int x : adj[u]) {
+                if(!mark[x]) {
+                    mark[x] = true;
                     used.push_back(x);
                 }
             }
 
-            int count=0;
+            int count = 0;
 
             // Count how many neighbors of v were also neighbors of u.
-            for(int y:adj[v])
+            for(int y : adj[v])
                 if(mark[y])
                     count++;
 
             // Update best answer if this pair is better.
-            if(count>bestCount){
-                bestCount=count;
-                best={u,v};
+            if(count > bestCount) {
+                bestCount = count;
+                best = {u, v};
             }
 
             // Clear marks before checking the next pair.
-            for(int x:used)
-                mark[x]=false;
+            for(int x : used)
+                mark[x] = false;
         }
     }
 
@@ -446,23 +446,23 @@ Apex species = vertices with **indegree = 0**.
 ## Code
 
 ```c++
-vector<int> findApex(const Graph& adj){
+vector<int> findApex(const Graph& adj) {
 
-    int n=adj.size();
+    int n = adj.size();
 
     // indegree[i] = number of edges coming into vertex i
-    vector<int> indegree(n,0);
+    vector<int> indegree(n, 0);
 
     // Count incoming edges for each vertex.
-    for(int u=0;u<n;u++)
-        for(int v:adj[u])
+    for(int u = 0; u < n; u++)
+        for(int v : adj[u])
             indegree[v]++;
 
     vector<int> apex;
 
     // Apex species are not eaten by anything => indegree = 0
-    for(int i=0;i<n;i++)
-        if(indegree[i]==0)
+    for(int i = 0; i < n; i++)
+        if(indegree[i] == 0)
             apex.push_back(i);
 
     return apex;
@@ -500,41 +500,42 @@ Any sink not reached loses power.
 ## Code
 
 ```c++
-vector<int> sinksFail(const Graph& adj,int s){
+vector<int> sinksFail(const Graph& adj,int s) {
 
-    int n=adj.size();
-    vector<int> indeg(n,0),outdeg(n,0);
+    int n = adj.size();
+    vector<int> indeg(n, 0);
+    vector<int> outdeg(n, 0);
 
     // Compute indegree and outdegree of every vertex.
-    for(int u=0;u<n;u++){
-        outdeg[u]=adj[u].size();
-        for(int v:adj[u])
+    for(int u = 0; u < n; u++) {
+        outdeg[u] = adj[u].size();
+        for(int v : adj[u])
             indeg[v]++;
     }
 
-    vector<bool> visited(n,false);
+    vector<bool> visited(n, false);
     queue<int> q;
 
     // Start BFS from every source except the failed station s.
-    for(int i=0;i<n;i++){
-        if(i!=s && indeg[i]==0){
-            visited[i]=true;
+    for(int i = 0; i < n; i++) {
+        if(i != s && indeg[i] == 0) {
+            visited[i] = true;
             q.push(i);
         }
     }
 
-    while(!q.empty()){
+    while(!q.empty()) {
 
-        int u=q.front();
+        int u = q.front();
         q.pop();
 
-        for(int v:adj[u]){
+        for(int v : adj[u]) {
 
             // Since s failed, we do not allow traversal through s.
             if(v==s) continue;
 
-            if(!visited[v]){
-                visited[v]=true;
+            if(!visited[v]) {
+                visited[v] = true;
                 q.push(v);
             }
         }
@@ -544,7 +545,7 @@ vector<int> sinksFail(const Graph& adj,int s){
 
     // A sink with outdegree 0 that is not reachable anymore loses power.
     for(int i=0;i<n;i++)
-        if(i!=s && outdeg[i]==0 && !visited[i])
+        if(i!=s && outdeg[i] == 0 && !visited[i])
             result.push_back(i);
 
     return result;
@@ -570,29 +571,29 @@ For every pair `(u,v)` check if `u` reaches `v` OR `v` reaches `u`.
 ## Code
 
 ```c++
-bool isSemiconnected(const Graph& adj){
+bool isSemiconnected(const Graph& adj) {
 
-    int n=adj.size();
+    int n = adj.size();
 
     // reach[u][v] = can u reach v ?
-    vector<vector<bool>> reach(n,vector<bool>(n,false));
+    vector<vector<bool>> reach(n, vector<bool>(n, false));
 
     // Run BFS from every start vertex s.
-    for(int s=0;s<n;s++){
+    for(int s = 0; s < n; s++) {
 
         queue<int> q;
-        reach[s][s]=true;
+        reach[s][s] = true;
         q.push(s);
 
-        while(!q.empty()){
+        while(!q.empty()) {
 
-            int u=q.front();
+            int u = q.front();
             q.pop();
 
-            for(int v:adj[u]){
+            for(int v : adj[u]) {
 
-                if(!reach[s][v]){
-                    reach[s][v]=true;
+                if(!reach[s][v]) {
+                    reach[s][v] = true;
                     q.push(v);
                 }
             }
@@ -601,8 +602,8 @@ bool isSemiconnected(const Graph& adj){
 
     // For semiconnected graphs, every pair (u,v) must be comparable:
     // either u reaches v OR v reaches u.
-    for(int u=0;u<n;u++)
-        for(int v=u+1;v<n;v++)
+    for(int u = 0; u < n; u++)
+        for(int v = u + 1; v < n; v++)
             if(!reach[u][v] && !reach[v][u])
                 return false;
 
@@ -631,30 +632,30 @@ Run BFS from every vertex and take the largest distance.
 ## Code
 
 ```c++
-int bfsDist(const Graph& adj,int start){
+int bfsDist(const Graph& adj,int start) {
 
-    int n=adj.size();
+    int n = adj.size();
 
     // dist[i] = shortest distance from start to i
-    vector<int> dist(n,-1);
+    vector<int> dist(n, -1);
     queue<int> q;
 
-    dist[start]=0;
+    dist[start] = 0;
     q.push(start);
 
-    int best=0;
+    int best = 0;
 
-    while(!q.empty()){
+    while(!q.empty()) {
 
         int u=q.front();
         q.pop();
 
-        for(int v:adj[u]){
+        for(int v : adj[u]) {
 
             // First time reaching v gives the shortest distance in an unweighted graph.
-            if(dist[v]==-1){
-                dist[v]=dist[u]+1;
-                best=max(best,dist[v]); // keep farthest distance seen from start
+            if(dist[v] == -1) {
+                dist[v] = dist[u] + 1;
+                best = max(best, dist[v]); // keep farthest distance seen from start
                 q.push(v);
             }
         }
@@ -663,14 +664,14 @@ int bfsDist(const Graph& adj,int start){
     return best; // eccentricity of start
 }
 
-int graphDiameter(const Graph& adj){
+int graphDiameter(const Graph& adj) {
 
-    int n=adj.size();
-    int diameter=0;
+    int n = adj.size();
+    int diameter = 0;
 
     // Run BFS from every vertex and keep the largest shortest-path distance.
-    for(int i=0;i<n;i++)
-        diameter=max(diameter,bfsDist(adj,i));
+    for(int i = 0; i < n; i++)
+        diameter = max(diameter, bfsDist(adj, i));
 
     return diameter;
 }
@@ -709,41 +710,62 @@ If you recognize these patterns quickly, you can solve most exam problems.
 
 # Pattern 1 — BFS Traversal (Breadth-First Search)
 
-Used for:
-- Connectivity
-- Shortest path (unweighted)
-- Reachability
-- Graph diameter
-- Power grid problems
-
 ```c++
+/**
+adj   = adjacency list representing the graph
+start = vertex where BFS traversal begins
+
+Graph structure:
+
+    0
+   / \
+  1   2
+  |   |
+  3   4
+
+BFS cycle detection (undirected)
+    0 ↔ 1
+    0 ↔ 2
+    1 ↔ 3
+    2 ↔ 4
+
+Example graph (adjacency list):
+adj[0] = {1, 2}
+adj[1] = {0, 3}
+adj[2] = {0, 4}
+adj[3] = {1}
+adj[4] = {2}
+
+start = 0   // BFS traversal begins from vertex 0
+*/
 void BFS(const Graph& adj, int start) {
 
-    int n = adj.size();
+    int n = adj.size(); // number of vertices = 5
 
     // visited[i] tells whether vertex i has already been discovered.
-    vector<bool> visited(n,false);
+    vector<bool> visited(n, false); // same as: vector<bool> visited = vector<bool>(n, false);
+                                    // visited = [false, false, false, false, false]
 
     // BFS uses a queue because it explores level by level.
     queue<int> q;
 
     // Start from the source vertex.
-    visited[start] = true;
-    q.push(start);
+    visited[start] = true; // visited = [true, false, false, false, false]
+    q.push(start);         // q = [0]
 
     while(!q.empty()) {
 
         // Take the next vertex from the front of the queue.
-        int u = q.front();
-        q.pop();
+        int u = q.front();  // u = [0], [1], [2], [3], [4]
+        q.pop();            // q after pop = [], [2], [3], [4], []
 
         // Explore every neighbor of u.
-        for(int v : adj[u]) {
+        for(int v : adj[u]) { // neighbors = [1, 2], [0, 3], [0, 4], [1], [2]
 
             // If v has not been seen before, discover it now.
             if(!visited[v]) {
-                visited[v] = true;
-                q.push(v);
+                visited[v] = true;  // discovered = [1, 2], [3], [4]
+                q.push(v);          // q after push = [1], [1, 2], [2, 3], [3, 4]
             }
         }
     }
@@ -767,39 +789,86 @@ visited[v] == true AND parent[u] != v
 ```
 
 ```c++
+/**
+adj = adjacency list representing the graph
+
+Graph structure:
+
+    0
+   / \
+  1   2
+  |   |
+  3   4
+
+BFS cycle detection (undirected)
+    0 ↔ 1
+    0 ↔ 2
+    1 ↔ 3
+    2 ↔ 4
+
+Example graph (adjacency list):
+
+adj[0] = {1, 2}
+adj[1] = {0, 3}
+adj[2] = {0, 4}
+adj[3] = {1}
+adj[4] = {2}
+*/
 bool hasCycle(const Graph& adj) {
 
-    int n = adj.size();
+    int n = adj.size(); // number of vertices = 5
 
     // visited[i] = was vertex i already discovered?
-    vector<bool> visited(n,false);
+    vector<bool> visited(n, false); // visited = [false, false, false, false, false]
 
     // parent[i] = which vertex discovered i in the BFS tree
-    vector<int> parent(n,-1);
+    vector<int> parent(n, -1); // parent = [-1, -1, -1, -1, -1]
 
     queue<int> q;
 
-    // This template starts BFS from vertex 0.
-    visited[0]=true;
-    q.push(0);
+    // This example starts BFS from vertex 0.
+    visited[0] = true; // visited = [true, false, false, false, false]
+    q.push(0);         // q = [0]
 
     while(!q.empty()) {
 
-        int u=q.front();
-        q.pop();
+        int u = q.front();  // u = [0], [1], [2], [3], [4]
+        q.pop();            // q after pop = [], [2], [3], [4], []
 
-        for(int v:adj[u]) {
+        for(int v : adj[u]) { // neighbors = [1, 2], [0, 3], [0, 4], [1], [2]
 
             // First visit to v: record its parent and continue BFS.
-            if(!visited[v]) {
-                visited[v]=true;
-                parent[v]=u;
-                q.push(v);
+            if(!visited[v]) {   // visited evolves only when a new vertex is discovered:
+                                // [true, false, false, false, false]  (before exploring u = 0)
+                                // [true, true, false, false, false]   (u = 0, discover v = 1)
+                                // [true, true, true, false, false]    (u = 0, discover v = 2)
+                                // [true, true, true, true, false]     (u = 1, discover v = 3)
+                                // [true, true, true, true, true]      (u = 2, discover v = 4)
+
+                visited[v] = true;   // discovered = [1, 2], [3], [4]
+                parent[v] = u;       // parent updates: parent[1] = 0, parent[2] = 0, parent[3] = 1, parent[4] = 2
+
+                q.push(v);           // q after push evolves: [1], [1, 2], [2, 3], [3, 4]
             }
+
             // If v is already visited and not the parent of u,
             // then we found another route back => cycle.
-            else if(parent[u]!=v) {
-                return true;
+            else if(parent[u] != v) {  // parent states when visited neighbors are checked:
+                                       // [-1, 0, 0, -1, -1]  (u = 1, v = 0)
+                                       // [-1, 0, 0, 1, -1]   (u = 2, v = 0)
+                                       // [-1, 0, 0, 1, 2]    (u = 3, v = 1)
+                                       // [-1, 0, 0, 1, 2]    (u = 4, v = 2)
+                /*
+                    Separate example of a cycle:
+
+                        0
+                        | \
+                        1--2
+
+                    If BFS reaches vertex 2 and sees neighbor 1,
+                    and parent[2] != 1, then a cycle is detected.
+                */
+                return true; // another path found → cycle
             }
         }
     }
@@ -814,33 +883,107 @@ bool hasCycle(const Graph& adj) {
 
 Used for detecting **directed cycles / DAG checking**.
 
-States
-
-```
-0 = unvisited
-1 = visiting
-2 = finished
-```
-
 ```c++
-bool dfs(int u,const Graph& adj,vector<int>& state){
+/**
+adj   = adjacency list representing a directed graph
+u     = current vertex being explored
+state = DFS visitation state for each vertex
 
-    // Mark u as active in the current recursion stack.
-    state[u] = 1;
+state meaning:
+0 = unvisited
+1 = currently in recursion stack (recurse)
+2 = fully processed (finish)
 
-    for(int v:adj[u]){
+Graph structure:
 
-        // Edge to an active vertex means a back edge => cycle.
-        if(state[v] == 1)
+    0
+   / \
+  1   2
+  |   |
+  3   4
+
+DFS example (no cycle):
+    0 → 1 → 3
+    ↓
+    2 → 4
+
+Example graph (adjacency list):
+
+adj[0] = {1, 2}
+adj[1] = {3}
+adj[2] = {4}
+adj[3] = {}
+adj[4] = {}
+
+state = [0, 0, 0, 0, 0]   // initial state (all unvisited)
+u = 0                     // example DFS start
+
+----------------------------------------------------------------
+
+Separate cycle example:
+    0 → 1 → 2
+    ↑       ↓
+    └───────┘
+
+In that cycle example:
+adj[0] = {1}
+adj[1] = {2}
+adj[2] = {0}
+*/
+bool dfs(const Graph& adj, vector<int>& state, int u) {
+
+    // Mark u as active in the current recursion stack (visiting).
+    state[u] = 1; // state evolution example:
+                  // [1, 0, 0, 0, 0]  (u = 0)
+                  // [1, 1, 0, 0, 0]  (u = 1)
+                  // [1, 1, 0, 1, 0]  (u = 3)
+                  // [1, 1, 0, 2, 0]  (finish 3)
+                  // [1, 2, 0, 2, 0]  (finish 1)
+                  // [1, 2, 1, 2, 0]  (u = 2)
+                  // [1, 2, 1, 2, 1]  (u = 4)
+                  // [1, 2, 1, 2, 2]  (finish 4)
+                  // [1, 2, 2, 2, 2]  (finish 2)
+                  // [2, 2, 2, 2, 2]  (finish 0)
+
+    for(int v : adj[u]) {  // neighbors by call:
+                           // u = 0 → [1, 2]
+                           // u = 1 → [3]
+                           // u = 3 → []
+                           // u = 2 → [4]
+                           // u = 4 → []
+
+        // Case 1: edge to an active vertex → back edge → cycle
+        if(state[v] == 1) { // state examples during DFS:
+                            // [1, 0, 0, 0, 0]  (u = 0, v = 1 → state[1] == 0 → False)
+                            // [1, 1, 0, 0, 0]  (u = 1, v = 3 → state[3] == 0 → False)
+                            // [1, 2, 0, 2, 0]  (u = 0, v = 2 → state[2] == 0 → False)
+                            // [1, 2, 1, 2, 0]  (u = 2, v = 4 → state[4] == 0 → False)
+                            //
+                            // Cycle example (different graph):
+                            // [1, 1, 1]      (u = 2, v = 0 → state[0] == 1 → True)
+
             return true;
+        }
 
-        // Only recurse on vertices not visited yet.
-        if(state[v] == 0 && dfs(v,adj,state))
+        // Case 2: vertex not visited yet → explore it
+        if(state[v] == 0 && dfs(adj, state, v)) {  // state examples:
+                                                   // [1, 0, 0, 0, 0]  (u = 0, v = 1 → recurse)
+                                                   // [1, 1, 0, 0, 0]  (u = 1, v = 3 → recurse)
+                                                   // [1, 1, 1, 0, 0]  (u = 2, v = 4 → recurse)
             return true;
+        }
+
+        // Case 3: state[v] == 2 → already fully processed
+        // nothing to do (DFS continues)
     }
 
     // All descendants of u are processed.
-    state[u] = 2;
+    state[u] = 2;   // state evolves when vertices finish (u):
+                    // [1, 1, 0, 2, 0]  (finish u = 3)
+                    // [1, 2, 0, 2, 0]  (finish u = 1)
+                    // [1, 2, 1, 2, 2]  (finish u = 4)
+                    // [1, 2, 2, 2, 2]  (finish u = 2)
+                    // [2, 2, 2, 2, 2]  (finish u = 0)
 
     return false;
 }
@@ -865,7 +1008,7 @@ Skip the removed item during traversal.
 Example (remove edge):
 
 ```c++
-if((u==a && v==b) || (u==b && v==a))
+if((u == a && v == b) || (u == b && v == a))
     continue;   // pretend edge (a,b) does not exist
 ```
 
@@ -901,8 +1044,8 @@ vector<int> indegree(n,0);
 
 // For every edge u -> v,
 // increase the number of incoming edges of v.
-for(int u=0;u<n;u++)
-    for(int v:adj[u])
+for(int u = 0; u < n; u++)
+    for(int v : adj[u])
         indegree[v]++;
 ```
 
@@ -929,34 +1072,87 @@ Used for:
 - Tree diameter
 
 ```c++
-vector<int> BFSdist(const Graph& adj,int start){
+/**
+adj   = adjacency list representing an unweighted undirected graph
+start = vertex where BFS traversal begins
 
-    int n = adj.size();
+Example graph (adjacency list):
+
+adj[0] = {1, 2}
+adj[1] = {0, 3}
+adj[2] = {0, 4}
+adj[3] = {1}
+adj[4] = {2}
+
+Graph structure:
+
+    0
+   / \
+  1   2
+  |   |
+  3   4
+
+Edges (undirected):
+    0 ↔ 1
+    0 ↔ 2
+    1 ↔ 3
+    2 ↔ 4
+
+Shortest path distances from start = 0:
+
+dist[0] = 0   // start vertex
+dist[1] = 1   // path: 0 → 1
+dist[2] = 1   // path: 0 → 2
+dist[3] = 2   // path: 0 → 1 → 3
+dist[4] = 2   // path: 0 → 2 → 4
+
+Final result:
+dist = [0, 1, 1, 2, 2]
+*/
+vector<int> BFSdist(const Graph& adj, int start) {
+
+    int n = adj.size();   // number of vertices = 5
 
     // dist[i] = shortest number of edges from start to i
-    vector<int> dist(n,-1);
+    // -1 means vertex has not been discovered yet
+    vector<int> dist(n, -1);   // dist = [-1, -1, -1, -1, -1]
 
+    // BFS uses a queue to explore vertices level by level.
     queue<int> q;
 
     // Distance from start to itself is 0.
-    dist[start] = 0;
-    q.push(start);
+    dist[start] = 0;      // dist = [0, -1, -1, -1, -1]
+    q.push(start);        // q = [0]
 
-    while(!q.empty()){
+    while(!q.empty()) {
 
-        int u=q.front();
-        q.pop();
+        int u = q.front();  // u = [0], [1], [2], [3], [4]
+        q.pop();            // q after pop = [], [2], [3], [4], []
 
-        for(int v:adj[u]){
+        for(int v : adj[u]) { // neighbors by call:
+                              // u = 0 → [1,2]
+                              // u = 1 → [3]
+                              // u = 2 → [4]
+                              // u = 3 → []
+                              // u = 4 → []
 
             // First time reaching v gives the shortest path in an unweighted graph.
-            if(dist[v]==-1){
-                dist[v] = dist[u] + 1;
-                q.push(v);
+            if(dist[v] == -1) {    // dist evolves when discovering vertices:
+                                  // [0, -1, -1, -1, -1]  (before exploring u = 0)
+                                  // [0,  1, -1, -1, -1]  (u = 0, discover v = 1)
+                                  // [0,  1,  1, -1, -1]  (u = 0, discover v = 2)
+                                  // [0,  1,  1,  2, -1]  (u = 1, discover v = 3)
+                                  // [0,  1,  1,  2,  2]  (u = 2, discover v = 4)
+
+                dist[v] = dist[u] + 1;   // distance increases by 1 edge
+                q.push(v);               // queue evolves:
+                                         // [1], [1, 2], [2, 3], [3, 4], [4]
             }
         }
     }
 
+    // Final distances from start vertex
+    // dist = [0, 1, 1, 2, 2]
     return dist;
 }
 ```
@@ -973,7 +1169,7 @@ Run BFS from every vertex
 
 ```c++
 // Pseudocode idea:
-for(int i=0;i<V;i++) {
+for(int i = 0; i < V; i++) {
     // Run BFS starting from i
     // Record which vertices are reachable from i
 }
@@ -995,7 +1191,7 @@ O(V(V+E))
 # Pattern 8 — Reverse Graph
 
 ```c++
-Graph reverseGraph(const Graph& adj){
+Graph reverseGraph(const Graph& adj) {
 
     int n = adj.size();
 
@@ -1003,8 +1199,8 @@ Graph reverseGraph(const Graph& adj){
     Graph rev(n);
 
     // Turn every edge u -> v into v -> u.
-    for(int u=0;u<n;u++)
-        for(int v:adj[u])
+    for(int u = 0; u < n; u++)
+        for(int v : adj[u])
             rev[v].push_back(u);
 
     return rev;

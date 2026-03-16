@@ -18,6 +18,12 @@ For each problem, the guide includes:
 - [Array Questions](#array-questions)
 - [Data Structure Questions](#data-structure-questions)
 
+## Additional Reference – Graph Data Structures
+
+For implementations and practice problems related to Graph data structures, including traversal and algorithm examples, please see my GitHub repository:
+
+- [Graph](https://github.com/gofmanben/Algorithms-CPP/tree/main/Test-5)
+
 ### Array Questions
 
 - [Question 1: Two numbers sum to x (or closest sum)](#question-1-two-numbers-sum-to-x-or-closest-sum) - Hash Map / Two Pointers (Easy)

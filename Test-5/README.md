@@ -102,6 +102,32 @@ bool hasCycleUndirected(const Graph& adj) {
 }
 ```
 
+## Pseudocode
+
+```text
+hasCycleUndirected(adj)
+    visited = all false
+    parent = all -1
+
+    for each start vertex
+        if visited[start] = false
+            mark start visited
+            enqueue start
+
+            while queue not empty
+                u = dequeue
+
+                for each neighbor v of u
+                    if visited[v] = false
+                        visited[v] = true
+                        parent[v] = u
+                        enqueue v
+                    else if parent[u] != v
+                        return true
+
+    return false
+```
+
 **Time Complexity:**
 
     O(V + E)
@@ -152,6 +178,27 @@ bool edgeInCycle(const Graph& adj, int a, int b) {
     // then there is another path from a to b, so the edge is in a cycle.
     return visited[b];
 }
+```
+
+## Pseudocode
+
+```text
+edgeInCycle(adj, u, v)
+    visited = all false
+    mark u visited
+    enqueue u
+
+    while queue not empty
+        x = dequeue
+
+        for each neighbor y of x
+            if edge (x,y) is the same as (u,v)
+                skip it
+            else if visited[y] = false
+                visited[y] = true
+                enqueue y
+
+    return visited[v]
 ```
 
 **Time Complexity**
@@ -219,6 +266,33 @@ bool isDAG(const Graph& adj) {
 
     return true; // no directed cycle found
 }
+```
+
+## Pseudocode
+
+```text
+dfsCycle(u)
+    state[u] = visiting
+
+    for each neighbor v of u
+        if state[v] = visiting
+            return true
+        if state[v] = unvisited
+            if DFS-CYCLE(v) = true
+                return true
+
+    state[u] = finished
+    return false
+
+isDAG(adj)
+    state = all unvisited
+
+    for each vertex u
+        if state[u] = unvisited
+            if DFS-CYCLE(u) = true
+                return false
+
+    return true
 ```
 
 **Time Complexity**
@@ -293,6 +367,35 @@ pair<bool,pair<int,int>> isCutVertex(const Graph& adj, int cut) {
 }
 ```
 
+## Pseudocode
+
+```text
+isCutVertex(adj, cut)
+    choose a start vertex that is not cut
+    if no such start exists
+        return false
+
+    visited = all false
+    mark start visited
+    enqueue start
+
+    while queue not empty
+        u = dequeue
+
+        for each neighbor w of u
+            if w = cut
+                skip it
+            else if visited[w] = false
+                visited[w] = true
+                enqueue w
+
+    for each vertex x
+        if x != cut and visited[x] = false
+            return true, (start, x)
+
+    return false
+```
+
 **Time Complexity**
 
     O(V + E)
@@ -353,6 +456,19 @@ Graph reverseGraph(const Graph& adj) {
 
     return rev;
 }
+```
+
+## Pseudocode
+
+```text
+reverseGraph(adj)
+    create empty graph rev with same number of vertices
+
+    for each vertex u
+        for each neighbor v of u
+            add edge v -> u to rev
+
+    return rev
 ```
 
 **Time Complexity**
@@ -425,6 +541,27 @@ pair<int,int> maxCommonNeighbors(const Graph& adj) {
 }
 ```
 
+## Pseudocode
+
+```text
+maxCommonNeighbors(adj)
+    bestPair = none
+    bestCount = -1
+
+    for each pair (u, v) with u < v
+        count = 0
+
+        for each vertex x
+            if x is neighbor of u and x is neighbor of v
+                count = count + 1
+
+        if count > bestCount
+            bestCount = count
+            bestPair = (u, v)
+
+    return bestPair
+```
+
 **Time Complexity**
 
     O(V^3)
@@ -467,6 +604,25 @@ vector<int> findApex(const Graph& adj) {
 
     return apex;
 }
+```
+
+## Pseudocode
+
+```text
+findApex(adj)
+    indegree = all 0
+
+    for each vertex u
+        for each neighbor v of u
+            indegree[v] = indegree[v] + 1
+
+    apex = empty list
+
+    for each vertex i
+        if indegree[i] = 0
+            add i to apex
+
+    return apex
 ```
 
 **Time Complexity**
@@ -552,6 +708,38 @@ vector<int> sinksFail(const Graph& adj,int s) {
 }
 ```
 
+## Pseudocode
+
+```text
+sinksFail(adj, s)
+    compute indegree and outdegree of every vertex
+
+    visited = all false
+
+    for each vertex u
+        if u != s and indegree[u] = 0
+            mark u visited
+            enqueue u
+
+    while queue not empty
+        x = dequeue
+
+        for each neighbor y of x
+            if y = s
+                skip it
+            else if visited[y] = false
+                visited[y] = true
+                enqueue y
+
+    result = empty list
+
+    for each vertex t
+        if t != s and outdegree[t] = 0 and visited[t] = false
+            add t to result
+
+    return result
+```
+
 **Time Complexity**
 
     O(V + E)
@@ -609,6 +797,21 @@ bool isSemiconnected(const Graph& adj) {
 
     return true;
 }
+```
+
+## Pseudocode
+
+```text
+isSemiconnected(adj)
+    for each start vertex s
+        run BFS or DFS from s
+        record which vertices are reachable from s
+
+    for each pair of vertices (u, v) with u < v
+        if u cannot reach v and v cannot reach u
+            return false
+
+    return true
 ```
 
 **Time Complexity**
@@ -677,6 +880,35 @@ int graphDiameter(const Graph& adj) {
 }
 ```
 
+## Pseudocode
+
+```text
+bfsDist(adj, start)
+    dist = all -1
+    dist[start] = 0
+    enqueue start
+    best = 0
+
+    while queue not empty
+        u = dequeue
+
+        for each neighbor v of u
+            if dist[v] = -1
+                dist[v] = dist[u] + 1
+                best = max(best, dist[v])
+                enqueue v
+
+    return best
+
+graphDiameter(adj)
+    diameter = 0
+
+    for each vertex u
+        diameter = max(diameter, BFS-MAX-DIST(adj, u))
+
+    return diameter
+```
+
 **Time Complexity**
 
     O(V(V+E))
@@ -693,6 +925,15 @@ Algorithm:
        // Second BFS finds the opposite end
     3. distance(A,B) = diameter
        // That distance is the tree diameter
+
+## Pseudocode
+
+```text
+TREE-DIAMETER(T)
+    run BFS from any vertex -> farthest vertex A
+    run BFS from A -> farthest vertex B
+    return distance from A to B
+```
 
 **Time Complexity**
 

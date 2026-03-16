@@ -20,7 +20,7 @@ For each problem, the guide includes:
 
 ## Additional Reference – Graph Data Structures
 
-For implementations and practice problems related to Graph data structures, including traversal and algorithm examples, please see my GitHub repository:
+For implementations and practice problems related to Graph data structures, including traversal and algorithm examples
 
 - [Graph](https://github.com/gofmanben/Algorithms-CPP/tree/main/Test-5)
 

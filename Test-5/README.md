@@ -104,7 +104,7 @@ bool hasCycleUndirected(const Graph& adj) {
 
 ## Pseudocode
 
-```text
+```python
 hasCycleUndirected(adj)
     visited = all false
     parent = all -1
@@ -182,7 +182,7 @@ bool edgeInCycle(const Graph& adj, int a, int b) {
 
 ## Pseudocode
 
-```text
+```python
 edgeInCycle(adj, u, v)
     visited = all false
     mark u visited
@@ -270,7 +270,7 @@ bool isDAG(const Graph& adj) {
 
 ## Pseudocode
 
-```text
+```python
 dfsCycle(u)
     state[u] = visiting
 
@@ -369,7 +369,7 @@ pair<bool,pair<int,int>> isCutVertex(const Graph& adj, int cut) {
 
 ## Pseudocode
 
-```text
+```python
 isCutVertex(adj, cut)
     choose a start vertex that is not cut
     if no such start exists
@@ -460,7 +460,7 @@ Graph reverseGraph(const Graph& adj) {
 
 ## Pseudocode
 
-```text
+```python
 reverseGraph(adj)
     create empty graph rev with same number of vertices
 
@@ -543,7 +543,7 @@ pair<int,int> maxCommonNeighbors(const Graph& adj) {
 
 ## Pseudocode
 
-```text
+```python
 maxCommonNeighbors(adj)
     bestPair = none
     bestCount = -1
@@ -608,7 +608,7 @@ vector<int> findApex(const Graph& adj) {
 
 ## Pseudocode
 
-```text
+```python
 findApex(adj)
     indegree = all 0
 
@@ -710,7 +710,7 @@ vector<int> sinksFail(const Graph& adj,int s) {
 
 ## Pseudocode
 
-```text
+```python
 sinksFail(adj, s)
     compute indegree and outdegree of every vertex
 
@@ -801,7 +801,7 @@ bool isSemiconnected(const Graph& adj) {
 
 ## Pseudocode
 
-```text
+```python
 isSemiconnected(adj)
     for each start vertex s
         run BFS or DFS from s
@@ -882,7 +882,7 @@ int graphDiameter(const Graph& adj) {
 
 ## Pseudocode
 
-```text
+```python
 bfsDist(adj, start)
     dist = all -1
     dist[start] = 0
@@ -928,8 +928,8 @@ Algorithm:
 
 ## Pseudocode
 
-```text
-TREE-DIAMETER(T)
+```python
+treeDiameter(T)
     run BFS from any vertex -> farthest vertex A
     run BFS from A -> farthest vertex B
     return distance from A to B

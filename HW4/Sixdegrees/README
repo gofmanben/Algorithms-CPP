@@ -1,0 +1,140 @@
+# HW4: Six Degrees of Kevin Bacon
+
+This program finds the **shortest connection between two actors through
+the movies they have appeared in**, similar to the classic *Six Degrees
+of Kevin Bacon* problem.
+
+The movie dataset is converted into a **graph** where:
+
+-   **Actors** are nodes
+-   **Movies** are nodes
+-   Edges connect **actors to movies they appeared in**
+
+The program uses **Breadth-First Search (BFS)** to compute the shortest
+path between actors.
+
+------------------------------------------------------------------------
+
+# Usage
+
+## Input Format
+
+Each line of the input file contains two actor names:
+
+    <ACTOR1> <ACTOR2>
+
+Example:
+
+    Brad_Pitt Amitabh_Bachchan
+    Will_Smith Ellen_Page
+
+------------------------------------------------------------------------
+
+## Running
+```
+    $ ./main <input file> <output file>
+```
+Example:
+```
+    $ ./main simple-input.txt test-output.txt
+```
+The program reads actor pairs from the input file and writes results to
+the output file.
+
+------------------------------------------------------------------------
+
+# Output Format
+
+The program prints one result per line corresponding to each input pair.
+
+### 1. Actor not present
+
+If either actor does not appear in the movie dataset:
+
+    Not present
+
+### 2. No connection exists
+
+If both actors exist but there is **no path connecting them** through
+movies:
+
+    Not present
+
+### 3. Same actor
+
+If both actors are the same:
+
+    <ACTOR1>
+
+Example:
+
+    Ingrid_Bergman
+
+### 4. Shortest actor connection path
+
+If a connection exists, the program prints the **shortest path of
+actors**, including the movie connecting each pair.
+
+Example:
+```
+$ ./main ./Tests/more-input.txt test-output.txt
+```
+
+    - Brad_Pitt -(Pros_and_Cons:_Inside_Ocean's_Outfit)- George_Clooney -(Directing_Hollywood)- Scarlett_Johansson -(Justin_Timberlake:_What_Goes_Around_...Comes_Around)- Justin_Timberlake -(Justin_Timberlake:_Justified_-_The_Videos)- Nelly -(Nelly_&_St._Lunatics:_Batter_Up)- Ali -(Khaidi_No._150)- Chiranjeevi -(Sye_Raa_Narasimha_Reddy)- Amitabh_Bachchan
+    - Brad_Pitt -(Moneyball:_Playing_the_Game)- Philip_Seymour_Hoffman -(The_Making_of_the_Mission)- Tom_Cruise
+    - Will_Smith -(Seven_Pounds:_Creating_the_Perfect_Ensemble)- Rosario_Dawson -(Find_Your_Groove)- Whoopi_Goldberg -(Na_Nai'a:_Legend_of_the_Dolphins)- Ellen_Page
+
+
+General format:
+
+    Actor -(Movie)- Actor -(Movie)- Actor
+
+If two actors share multiple movies, the program selects the **earliest
+movie in the dataset**.
+
+------------------------------------------------------------------------
+
+# Algorithm
+
+The program uses **Breadth-First Search (BFS)** to find the shortest
+path.
+
+BFS explores the graph **layer by layer**:
+
+Level 0\
+Start Actor
+
+Level 1\
+Movies the actor appeared in
+
+Level 2\
+Actors in those movies
+
+Level 3\
+Movies those actors appeared in
+
+Level 4\
+More actors
+
+So BFS searches like:
+
+distance 0 → distance 1 → distance 2 → distance 3
+
+Because BFS explores in this order, **the first time the target actor is
+reached guarantees the shortest path**.
+
+------------------------------------------------------------------------
+
+# Build
+
+Compile the program using:
+```
+    make
+```
+
+# Cleaning
+
+Remove compiled files with:
+```
+    make clean
+```
